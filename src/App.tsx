@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaApple, FaGooglePlay } from 'react-icons/fa';
 import Contact from './pages/Contact';
 import CompliancePolicy from './pages/CompliancePolicy';
 import TermsOfService from './pages/TermsOfService';
@@ -436,24 +436,33 @@ function KYCForm() {
           </p>
 
           {/* Mobile App Promo Banner */}
-          <div className="mt-12 overflow-hidden bg-gradient-to-br from-[#003061] via-[#004d99] to-[#001a3d] p-6 sm:p-10 flex flex-col lg:flex-row items-center gap-8 sm:gap-12 group">
+          <div className="mt-12 overflow-hidden bg-gradient-to-br from-[#003061] via-[#004d99] to-[#011429] p-6 sm:p-10 flex flex-col lg:flex-row items-center gap-8 sm:gap-12 group">
             <div className="flex-1 text-center lg:text-left">
               <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400 mb-4 opacity-80">Lifestyle & Finance — ENAKO App</div>
-              <h3 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight tracking-tight">Financial Freedom<br/>in One App</h3>
+              <h3 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight tracking-tight italic">Financial Freedom<br/>in One App</h3>
               <p className="text-blue-100/70 text-sm sm:text-base mb-8 leading-relaxed max-w-xl">
-                Beyond compliance, the ENAKO mobile app empowers you to save, invest, and manage daily bills effortlessly. From digital njangi to interest-yielding savings, take control of your financial journey.
+                The ENAKO mobile app is designed to simplify your life. Save money with varied accounts, play njangi online with ease, and pay all your utility bills (electricity, water, school fees, and rent) — all while earning from managed investments.
               </p>
-              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                {['Digital Njangi', 'Bill Payments', 'Interest Savings', 'Business Investment'].map(f => (
-                  <div key={f} className="bg-white/5 border border-white/10 px-3 py-1.5 text-blue-200 text-[10px] font-bold uppercase tracking-wider">
-                    {f}
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start items-center">
+                <div className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-2.5 transition-colors cursor-pointer">
+                  <FaApple className="text-xl text-white" />
+                  <div className="text-left">
+                    <div className="text-[8px] uppercase leading-none opacity-60">Download on</div>
+                    <div className="text-xs font-bold text-white leading-none">App Store</div>
                   </div>
-                ))}
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-2.5 transition-colors cursor-pointer">
+                  <FaGooglePlay className="text-lg text-white" />
+                  <div className="text-left">
+                    <div className="text-[8px] uppercase leading-none opacity-60">Get it on</div>
+                    <div className="text-xs font-bold text-white leading-none">Google Play</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="w-56 sm:w-64 lg:w-72 shrink-0 relative">
-              <div className="absolute inset-0 bg-blue-500/20 blur-3xl scale-125 rounded-full" />
-              <img src="/mobile_mockup.png" alt="ENAKO Mobile App" className="relative w-full h-auto shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]" />
+              <div className="absolute inset-0 bg-blue-500/20 blur-[100px] scale-125 rounded-full" />
+              <img src="/phone.jpeg" alt="ENAKO Mobile App" className="relative w-full h-auto shadow-2xl transition-transform duration-500 group-hover:scale-105" />
             </div>
           </div>
 
@@ -654,57 +663,72 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* MOBILE APP */}
-      <section className="py-20 sm:py-32 bg-slate-950 relative overflow-hidden">
-        {/* Background elements */}
-        <div className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: 'radial-gradient(circle, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-600/10 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2" />
+      {/* MOBILE APP SECTION */}
+      <section className="py-20 sm:py-32 bg-[#020817] relative overflow-hidden">
+        {/* Background glow effects */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[130px] rounded-full translate-x-1/3 -translate-y-1/3" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-600/10 blur-[130px] rounded-full -translate-x-1/3 translate-y-1/3" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-16 lg:gap-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-20 lg:gap-32">
           <motion.div {...fadeUp} className="order-2 lg:order-1">
-            <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400 mb-6">Fintech of the Future</div>
-            <h2 className="text-4xl sm:text-6xl font-extrabold text-white leading-tight tracking-tighter mb-8 italic">
-              ENAKO:<br/>Beyond Banking.
+            <div className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-500 mb-6 drop-shadow-sm">The Ultimate Finance App</div>
+            <h2 className="text-4xl sm:text-6xl font-extrabold text-white leading-[1.1] tracking-tighter mb-8 italic">
+              Experience the<br/>ENAKO Difference.
             </h2>
-            <div className="space-y-10">
+            <div className="space-y-12">
               <div>
-                <h4 className="text-white font-bold text-lg mb-3 flex items-center gap-3">
-                  <span className="w-8 h-px bg-blue-500" /> Smart Savings
+                <h4 className="text-white font-bold text-xl mb-3 flex items-center gap-4">
+                  <span className="w-10 h-px bg-blue-500/50" /> Online Njangi & Bill Payments
                 </h4>
-                <p className="text-slate-400 text-sm sm:text-base leading-relaxed pl-11">
-                  Choose your way to grow. From **Yield Accounts** with high interest returns to **Locked Savings** for long-term goals and **Normal Savings** for instant anytime access.
+                <p className="text-slate-400 text-sm sm:text-base leading-relaxed pl-14">
+                  Participate in our signature **Online Njangi** feature effortlessly. Manage your community contributions while paying for **electricity, water, school fees, and rent** directly through the app.
                 </p>
               </div>
               <div>
-                <h4 className="text-white font-bold text-lg mb-3 flex items-center gap-3">
-                  <span className="w-8 h-px bg-blue-500" /> Digital Njangi & Bills
+                <h4 className="text-white font-bold text-xl mb-3 flex items-center gap-4">
+                  <span className="w-10 h-px bg-blue-500/50" /> Three Savings Architectures
                 </h4>
-                <p className="text-slate-400 text-sm sm:text-base leading-relaxed pl-11">
-                  Participate in online njangi cycles seamlessly. Pay for **electricity, water, school fees, and rent** in seconds with no hidden charges.
+                <p className="text-slate-400 text-sm sm:text-base leading-relaxed pl-14">
+                  Tailored accounts for every goal: **Yield Savings** for interest returns, **Normal Savings** for daily flexibility, and **Lock Savings** to guarantee your financial discipline for set periods.
                 </p>
               </div>
               <div>
-                <h4 className="text-white font-bold text-lg mb-3 flex items-center gap-3">
-                  <span className="w-8 h-px bg-blue-500" /> Managed Investments
+                <h4 className="text-white font-bold text-xl mb-3 flex items-center gap-4">
+                  <span className="w-10 h-px bg-blue-500/50" /> Managed Business Investments
                 </h4>
-                <p className="text-slate-400 text-sm sm:text-base leading-relaxed pl-11">
-                  Invest in verified businesses managed directly by ENAKO. Earn a steady monthly percentage on your capital without doing the heavy lifting.
+                <p className="text-slate-400 text-sm sm:text-base leading-relaxed pl-14">
+                  Invest your capital into high-growth businesses managed by the ENAKO team. Enjoy a **monthly percentage return** on your investment without having to run the operations yourself.
                 </p>
               </div>
             </div>
-            <div className="mt-12 flex flex-wrap gap-4">
-              <div className="border border-white/20 text-white font-bold px-8 py-3 text-sm hover:bg-white/5 transition-colors cursor-not-allowed">App Store</div>
-              <div className="bg-white text-slate-900 font-bold px-8 py-3 text-sm hover:bg-slate-100 transition-colors cursor-not-allowed">Google Play</div>
+            
+            <div className="mt-14 flex flex-wrap gap-5 justify-start">
+              <button className="flex items-center gap-3 bg-white text-slate-900 px-8 py-3.5 transition-all hover:bg-slate-100 group">
+                <FaApple className="text-2xl" />
+                <div className="text-left">
+                  <div className="text-[8px] uppercase tracking-wider font-bold opacity-50 mb-0.5">App Store</div>
+                  <div className="text-sm font-extrabold leading-none">iPhone Download</div>
+                </div>
+              </button>
+              <button className="flex items-center gap-3 border border-white/20 text-white px-8 py-3.5 transition-all hover:bg-white/5">
+                <FaGooglePlay className="text-xl" />
+                <div className="text-left">
+                  <div className="text-[8px] uppercase tracking-wider font-bold opacity-50 mb-0.5">Google Play</div>
+                  <div className="text-sm font-extrabold leading-none">Android Install</div>
+                </div>
+              </button>
             </div>
           </motion.div>
 
           <motion.div {...fadeUp} transition={{ duration: 0.8, delay: 0.2 }} className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-blue-500/20 blur-[100px] scale-125 opacity-50 group-hover:opacity-80 transition-opacity" />
-              <div className="relative border-[12px] border-slate-900 rounded-[3rem] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)]">
-                <img src="/mobile_mockup.png" alt="ENAKO Mobile App" className="w-[280px] sm:w-[320px] h-auto object-cover" />
+            <div className="relative">
+              {/* Outer soft glow */}
+              <div className="absolute inset-0 bg-blue-600/30 blur-[120px] scale-150 opacity-40" />
+              {/* Device frame simulation */}
+              <div className="relative bg-slate-900 p-2 rounded-[3.5rem] shadow-[0_0_100px_rgba(0,0,0,0.6)]">
+                <div className="rounded-[3rem] overflow-hidden border border-white/10">
+                  <img src="/phone.jpeg" alt="ENAKO Mobile App" className="w-[300px] sm:w-[340px] h-auto object-cover" />
+                </div>
               </div>
             </div>
           </motion.div>
