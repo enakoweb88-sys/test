@@ -469,30 +469,7 @@ function KYCForm() {
   );
 }
 
-// ─── Animated Counter ─────────────────────────────────────────────────────────
-function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        let start = 0;
-        const step = Math.ceil(to / 60);
-        const timer = setInterval(() => {
-          start += step;
-          if (start >= to) { setCount(to); clearInterval(timer); }
-          else setCount(start);
-        }, 25);
-        obs.disconnect();
-      }
-    }, { threshold: 0.5 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [to]);
-  return <div ref={ref}>{count}{suffix}</div>;
-}
+
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 function LandingPage() {
