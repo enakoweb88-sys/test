@@ -401,7 +401,7 @@ function BrandHeader() {
         <Link to="/" className="flex items-center gap-3">
           <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
         </Link>
-        <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-white/85">
+        <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-white/85 whitespace-nowrap">
           <FaShieldAlt className="text-blue-300" />
           Secure. Compliant. Trusted.
         </div>

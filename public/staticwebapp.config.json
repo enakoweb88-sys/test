@@ -1,0 +1,6 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/logo.png", "/download.jpg", "/phone.jpeg", "/mobile_mockup.png", "/screen.png"]
+  }
+}

@@ -730,7 +730,8 @@ function LandingPage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       {/* NAV + HERO */}
       <section className="relative min-h-[720px] bg-[#030b21] overflow-hidden text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_34%,rgba(49,103,255,0.28),transparent_34%),radial-gradient(circle_at_22%_18%,rgba(44,116,255,0.14),transparent_28%),linear-gradient(180deg,#07142e_0%,#030b21_100%)]" />
+        <div className="absolute inset-0 lg:hidden bg-[linear-gradient(180deg,rgba(3,11,33,0.72)_0%,rgba(3,11,33,0.86)_48%,rgba(3,11,33,0.98)_100%),url('/download.jpg')] bg-cover bg-center" />
+        <div className="absolute inset-0 hidden lg:block bg-[radial-gradient(circle_at_72%_34%,rgba(49,103,255,0.28),transparent_34%),radial-gradient(circle_at_22%_18%,rgba(44,116,255,0.14),transparent_28%),linear-gradient(180deg,#07142e_0%,#030b21_100%)]" />
         <div className="absolute inset-0 opacity-[0.18]"
           style={{ backgroundImage: 'radial-gradient(circle, rgba(85,132,255,0.55) 1px, transparent 1px)', backgroundSize: '46px 46px' }} />
 
@@ -871,7 +872,7 @@ function LandingPage() {
           )}
         </nav>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 pt-20 sm:pt-24 pb-28 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-12 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 pt-12 sm:pt-24 pb-28 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-12 items-center">
           <motion.div initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/40 bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-200 shadow-[inset_0_0_18px_rgba(96,165,250,0.15)] mb-7">
               <span className="h-6 w-6 rounded-full bg-blue-500/15 border border-blue-400/30 flex items-center justify-center text-blue-400">
@@ -887,19 +888,19 @@ function LandingPage() {
               {t.heroSub}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-9 max-w-2xl mx-auto lg:mx-0">
+            <div className="grid grid-cols-3 gap-2 sm:gap-5 mb-9 max-w-2xl mx-auto lg:mx-0">
               {[
                 { icon: FaShieldAlt, title: t.secure, text: t.bankEnc },
                 { icon: FaCheck, title: t.compliant, text: t.meetsStd },
                 { icon: FaLock, title: t.trusted, text: t.privacyMat },
               ].map(item => (
-                <div key={item.title} className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-3">
-                  <div className="h-9 w-9 rounded-xl border border-blue-400/35 bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+                <div key={item.title} className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3 rounded-xl border border-white/10 bg-white/[0.06] px-2 py-3 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
+                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl border border-blue-400/35 bg-blue-500/10 text-blue-300 sm:text-blue-400 flex items-center justify-center shrink-0">
                     <item.icon />
                   </div>
-                  <div>
-                    <div className="text-sm font-bold text-white">{item.title}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{item.text}</div>
+                  <div className="min-w-0">
+                    <div className="text-[11px] sm:text-sm font-bold text-white leading-tight whitespace-nowrap">{item.title}</div>
+                    <div className="hidden sm:block text-xs text-slate-400 mt-0.5">{item.text}</div>
                   </div>
                 </div>
               ))}

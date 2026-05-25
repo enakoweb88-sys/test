@@ -46,7 +46,7 @@ export default function Register() {
           <Link to="/" className="flex items-center gap-3">
             <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
           </Link>
-          <div className="hidden sm:flex items-center gap-2 text-sm font-bold text-white">
+          <div className="hidden sm:flex items-center gap-2 text-sm font-bold text-white whitespace-nowrap">
             <FaShieldAlt className="text-blue-300" />
             Secure. Compliant. Trusted.
           </div>
