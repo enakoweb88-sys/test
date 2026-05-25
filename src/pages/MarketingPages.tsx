@@ -27,6 +27,10 @@ const navItems = [
   { label: 'Contact', path: '/contact' },
 ];
 
+const contactPhone = '+237 6 70 67 12 49';
+const websiteUrl = 'https://www.enako.cm';
+const websiteLabel = 'www.enako.cm';
+
 export function MarketingHeader() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -35,14 +39,7 @@ export function MarketingHeader() {
     <header className="relative z-30 bg-[#030b21] border-b border-white/10">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <div className="relative h-10 w-10 rounded-xl bg-[#003061]/70 border border-blue-300/25 flex items-center justify-center text-blue-300">
-            <FaShieldAlt className="text-xl" />
-            <FaCheck className="absolute text-[9px] text-white" />
-          </div>
-          <div>
-            <div className="text-2xl font-extrabold leading-none text-white tracking-wide">ENAKO</div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65">KYC Onboarding</div>
-          </div>
+          <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold text-white/70">
@@ -100,10 +97,7 @@ export function MarketingFooter() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] gap-10">
         <div>
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-9 w-9 rounded-xl bg-[#003061] flex items-center justify-center text-blue-200">
-              <FaShieldAlt />
-            </div>
-            <div className="text-white font-extrabold text-xl">ENAKO</div>
+            <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
           </div>
           <p className="text-sm leading-7 max-w-md">Secure, compliant, and professional KYC onboarding for individuals and companies.</p>
         </div>
@@ -114,8 +108,11 @@ export function MarketingFooter() {
           </div>
         </div>
         <div>
-          <div className="text-white text-xs font-extrabold uppercase tracking-widest mb-4">Legal</div>
+          <div className="text-white text-xs font-extrabold uppercase tracking-widest mb-4">Contact</div>
           <div className="flex flex-col gap-2 text-sm">
+            <span>enakocompanyltd@gmail.com</span>
+            <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="hover:text-white">{contactPhone}</a>
+            <a href={websiteUrl} target="_blank" rel="noreferrer" className="hover:text-white">{websiteLabel}</a>
             <Link to="/compliance-policy" className="hover:text-white">Compliance Policy</Link>
             <Link to="/terms" className="hover:text-white">Terms of Service</Link>
             <span>© 2026 ENAKO Financial.</span>
@@ -297,7 +294,8 @@ export function MarketingContact() {
         <div className="space-y-5">
           {[
             { icon: FaEnvelope, label: 'Email', value: 'enakocompanyltd@gmail.com' },
-            { icon: FaPhoneAlt, label: 'Phone', value: '+1 (800) 000-0000' },
+            { icon: FaPhoneAlt, label: 'Phone', value: contactPhone },
+            { icon: FaGlobe, label: 'Website', value: websiteLabel },
             { icon: FaClock, label: 'Office Hours', value: 'Mon - Fri, 9am - 5pm GMT' },
           ].map(item => (
             <div key={item.label} className="bg-white border border-[#d9e5f5] rounded-3xl p-6 flex items-center gap-5 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">

@@ -26,7 +26,10 @@ import ClientKycForm from './pages/ClientKycForm';
 import { InfoPage } from './pages/MarketingPages';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
-const WHATSAPP_NUMBER = '1234567890'; // Replace with your actual WhatsApp number
+const CONTACT_PHONE = '+237 6 70 67 12 49';
+const WHATSAPP_NUMBER = '237670671249';
+const WEBSITE_URL = 'https://www.enako.cm';
+const WEBSITE_LABEL = 'www.enako.cm';
 
 // ─── WhatsApp Widget ──────────────────────────────────────────────────────────
 function WhatsAppWidget() {
@@ -194,8 +197,7 @@ function Sidebar({ active }: { active: string }) {
   return (
     <aside className="hidden md:flex w-56 lg:w-64 shrink-0 fixed top-0 left-0 h-screen bg-white border-r border-slate-200 flex-col px-4 py-8 z-20 overflow-y-auto">
       <Link to="/" className="flex items-center gap-2 mb-8 no-underline">
-        <div className="w-6 h-1.5 bg-[#003061] rounded-sm" />
-        <span className="text-base lg:text-lg font-extrabold text-[#003061] tracking-tight">ENAKO</span>
+        <img src="/logo.png" alt="ENAKO Logo" className="h-24 w-auto object-contain" />
       </Link>
       <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 px-1">KYC Progress</div>
       <nav className="flex flex-col gap-0.5">
@@ -269,8 +271,7 @@ function KYCForm() {
       <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-white border-b border-slate-200 px-4 py-3 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-1 bg-[#003061] rounded-sm" />
-            <span className="text-sm font-extrabold text-[#003061]">ENAKO</span>
+            <img src="/logo.png" alt="ENAKO Logo" className="h-24 w-auto object-contain" />
           </div>
           <div className="text-right">
             <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 leading-none">Step {activeLabel?.num} of 6</div>
@@ -484,7 +485,7 @@ function KYCForm() {
 
           {/* Footer */}
           <footer className="mt-12 pt-8 border-t border-slate-200 text-center">
-            <div className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-slate-800 mb-3">ENAKO FINANCIAL</div>
+            <img src="/logo.png" alt="ENAKO Financial" className="mx-auto mb-4 h-24 w-auto object-contain" />
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs text-slate-400 mb-4">
               <Link to="/contact" className="hover:text-slate-600 transition-colors">Contact Support</Link>
               <Link to="/compliance-policy" className="hover:text-slate-600 transition-colors">Compliance Policy</Link>
@@ -736,14 +737,7 @@ function LandingPage() {
         <nav className="relative z-30 px-4 sm:px-8 pt-5">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3">
-              <div className="relative h-10 w-10 rounded-xl bg-blue-500/15 border border-blue-400/30 flex items-center justify-center text-blue-400 shadow-[0_0_28px_rgba(59,130,246,0.35)]">
-                <FaShieldAlt className="text-xl" />
-                <FaCheck className="absolute text-[9px] text-white" />
-              </div>
-              <div>
-                <div className="text-2xl font-extrabold leading-none tracking-wide">ENAKO</div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65">KYC Onboarding</div>
-              </div>
+              <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
             </Link>
 
             <div className="hidden lg:flex items-center gap-9 text-sm font-semibold text-white/80">
@@ -1228,10 +1222,7 @@ function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10 mb-10 text-center sm:text-left">
             <div>
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-4">
-                <div className="w-6 h-1.5 bg-blue-400 rounded-sm" />
-                <span className="text-white font-extrabold text-base">ENAKO</span>
-              </div>
+              <img src="/logo.png" alt="ENAKO Logo" className="mx-auto sm:mx-0 mb-5 h-28 w-auto object-contain" />
               <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto sm:mx-0">{t.footerSlogan}</p>
             </div>
             <div>
@@ -1249,6 +1240,8 @@ function LandingPage() {
               <div className="text-xs space-y-1.5">
                 <div>enakocompanyltd@gmail.com</div>
                 <div>legal@enako.com</div>
+                <a href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`} className="block hover:text-white transition-colors">{CONTACT_PHONE}</a>
+                <a href={WEBSITE_URL} target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">{WEBSITE_LABEL}</a>
                 <div>{t.footerHours}</div>
               </div>
             </div>

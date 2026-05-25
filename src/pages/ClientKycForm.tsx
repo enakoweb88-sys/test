@@ -399,14 +399,7 @@ function BrandHeader() {
     <header className="bg-[#030b21] border-b border-white/10 text-white">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <div className="relative h-10 w-10 rounded-xl bg-[#003061]/70 border border-blue-300/25 flex items-center justify-center text-blue-300">
-            <FaShieldAlt className="text-xl" />
-            <FaCheck className="absolute text-[9px] text-white" />
-          </div>
-          <div>
-            <div className="text-2xl font-extrabold leading-none tracking-wide">ENAKO</div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65">KYC Onboarding</div>
-          </div>
+          <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
         </Link>
         <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-white/85">
           <FaShieldAlt className="text-blue-300" />
