@@ -409,12 +409,14 @@ function KYCForm() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
               <UploadBox label="i. Certificate of Incorporation" hint="PDF or JPG up to 10MB" />
               <UploadBox label="ii. Articles of Association" hint="PDF up to 10MB" />
-              <UploadBox label="iii. Company Tax Registration Certificate" hint="Current valid year" />
-              <UploadBox label="iv. IDs / Passports of Directors & Shareholders" hint="High-resolution scan required" />
-              <UploadBox label="v. Proof of Address" hint="Utility Bill or Lease Agreement" />
-              <UploadBox label="vi. AML Policy Document" hint="Current internal AML policy" />
+              <UploadBox label="iii. Taxpayer Card" hint="PDF or JPG up to 10MB" />
+              <UploadBox label="iv. Company Tax Registration Certificate" hint="Current valid year" />
+              <UploadBox label="v. ID Card" hint="High-resolution scan required" />
+              <UploadBox label="vi. IDs / Passports of Directors & Shareholders" hint="High-resolution scan required" />
+              <UploadBox label="vii. Proof of Address" hint="Utility Bill or Lease Agreement" />
+              <UploadBox label="viii. AML Policy Document" hint="Current internal AML policy" />
             </div>
-            <UploadBox label="vii. Recent Company Bank Statement" hint="Last 6 months of account activity" />
+            <UploadBox label="ix. Recent Company Bank Statement" hint="Last 6 months of account activity" />
           </SectionCard>
 
           {/* ── 6. Declaration ───────────────────────────────── */}
@@ -575,7 +577,7 @@ const TRANSLATIONS = {
     getItOn: 'Get it on',
     reqTag: 'Requirements',
     reqTitle: 'Documents You Will Need',
-    reqSub: 'Prepare the following before you begin. All 7 documents are mandatory — incomplete applications cannot be processed.',
+    reqSub: 'Prepare the following before you begin. All 9 documents are mandatory — incomplete applications cannot be processed.',
     tableNum: '#',
     tableDoc: 'Document',
     tableReq: 'Requirement',
@@ -584,17 +586,21 @@ const TRANSLATIONS = {
     doc1Req: 'Original company registration issued by registry',
     doc2Name: 'Articles of Association',
     doc2Req: 'Constitutional document of the company',
-    doc3Name: 'Company Tax Registration Certificate',
-    doc3Req: 'Valid for current financial year',
-    doc4Name: 'Director & Shareholder IDs / Passports',
-    doc4Req: 'Government-issued ID, high-resolution scan',
-    doc5Name: 'Proof of Address',
-    doc5Req: 'Utility bill or lease agreement, not older than 3 months',
-    doc6Name: 'AML Policy Document',
-    doc6Req: 'Internal AML/CTF policy, signed and dated',
-    doc7Name: 'Recent Company Bank Statement',
-    doc7Req: 'Official statement covering last 6 months',
-    reqFooterText: 'All 7 documents must be submitted to proceed.',
+    doc3Name: 'Taxpayer Card',
+    doc3Req: 'Official taxpayer identification card or certificate',
+    doc4Name: 'Company Tax Registration Certificate',
+    doc4Req: 'Valid for current financial year',
+    doc5Name: 'ID Card',
+    doc5Req: 'Government-issued ID, high-resolution scan',
+    doc6Name: 'Director & Shareholder IDs / Passports',
+    doc6Req: 'Government-issued ID, high-resolution scan',
+    doc7Name: 'Proof of Address',
+    doc7Req: 'Utility bill or lease agreement, not older than 3 months',
+    doc8Name: 'AML Policy Document',
+    doc8Req: 'Internal AML/CTF policy, signed and dated',
+    doc9Name: 'Recent Company Bank Statement',
+    doc9Req: 'Official statement covering last 6 months',
+    reqFooterText: 'All 9 documents must be submitted to proceed.',
     reqFooterSub: 'Applications typically take 10–15 minutes to complete.',
     reqFooterBtn: 'Begin KYC Application',
     ctaTitle: 'Ready to Get Started?',
@@ -676,7 +682,7 @@ const TRANSLATIONS = {
     getItOn: 'Disponible sur',
     reqTag: 'Exigences',
     reqTitle: 'Documents dont vous aurez besoin',
-    reqSub: 'Préparez les documents suivants avant de commencer. Les 7 documents sont obligatoires — les demandes incomplètes ne peuvent pas être traitées.',
+    reqSub: 'Préparez les documents suivants avant de commencer. Les 9 documents sont obligatoires — les demandes incomplètes ne peuvent pas être traitées.',
     tableNum: '#',
     tableDoc: 'Document',
     tableReq: 'Exigence',
@@ -685,17 +691,21 @@ const TRANSLATIONS = {
     doc1Req: 'Enregistrement original de l\'entreprise délivré par le registre',
     doc2Name: 'Statuts de l\'entreprise',
     doc2Req: 'Document constitutionnel de l\'entreprise',
-    doc3Name: 'Certificat d\'enregistrement fiscal',
-    doc3Req: 'Valide pour l\'année financière en cours',
-    doc4Name: 'Pièces d\'identité / Passeports des directeurs & actionnaires',
-    doc4Req: 'Pièce d\'identité délivrée par le gouvernement, scan haute résolution',
-    doc5Name: 'Justificatif de domicile',
-    doc5Req: 'Facture de services publics ou contrat de bail, datant de moins de 3 mois',
-    doc6Name: 'Document de politique LCB-FT',
-    doc6Req: 'Politique LCB-FT interne actuelle, signée et datée',
-    doc7Name: 'Relevé bancaire récent de l\'entreprise',
-    doc7Req: 'Relevé officiel couvrant les 6 derniers mois',
-    reqFooterText: 'Les 7 documents doivent être soumis pour continuer.',
+    doc3Name: 'Carte de contribuable',
+    doc3Req: 'Carte ou certificat officiel d\'identification fiscale',
+    doc4Name: 'Certificat d\'enregistrement fiscal',
+    doc4Req: 'Valide pour l\'année financière en cours',
+    doc5Name: 'Carte d\'identité',
+    doc5Req: 'Pièce d\'identité délivrée par le gouvernement, scan haute résolution',
+    doc6Name: 'Pièces d\'identité / Passeports des directeurs & actionnaires',
+    doc6Req: 'Pièce d\'identité délivrée par le gouvernement, scan haute résolution',
+    doc7Name: 'Justificatif de domicile',
+    doc7Req: 'Facture de services publics ou contrat de bail, datant de moins de 3 mois',
+    doc8Name: 'Document de politique LCB-FT',
+    doc8Req: 'Politique LCB-FT interne actuelle, signée et datée',
+    doc9Name: 'Relevé bancaire récent de l\'entreprise',
+    doc9Req: 'Relevé officiel couvrant les 6 derniers mois',
+    reqFooterText: 'Les 9 documents doivent être soumis pour continuer.',
     reqFooterSub: 'Les demandes prennent généralement 10 à 15 minutes.',
     reqFooterBtn: 'Commencer l\'intégration KYC',
     ctaTitle: 'Prêt à commencer ?',
@@ -1162,10 +1172,12 @@ function LandingPage() {
             { num: 'i', doc: t.doc1Name, note: t.doc1Req, fmt: 'PDF / JPG' },
             { num: 'ii', doc: t.doc2Name, note: t.doc2Req, fmt: 'PDF' },
             { num: 'iii', doc: t.doc3Name, note: t.doc3Req, fmt: 'PDF / JPG' },
-            { num: 'iv', doc: t.doc4Name, note: t.doc4Req, fmt: 'JPG / PNG' },
-            { num: 'v', doc: t.doc5Name, note: t.doc5Req, fmt: 'PDF / JPG' },
-            { num: 'vi', doc: t.doc6Name, note: t.doc6Req, fmt: 'PDF' },
-            { num: 'vii', doc: t.doc7Name, note: t.doc7Req, fmt: 'PDF' },
+            { num: 'iv', doc: t.doc4Name, note: t.doc4Req, fmt: 'PDF / JPG' },
+            { num: 'v', doc: t.doc5Name, note: t.doc5Req, fmt: 'JPG / PNG' },
+            { num: 'vi', doc: t.doc6Name, note: t.doc6Req, fmt: 'JPG / PNG' },
+            { num: 'vii', doc: t.doc7Name, note: t.doc7Req, fmt: 'PDF / JPG' },
+            { num: 'viii', doc: t.doc8Name, note: t.doc8Req, fmt: 'PDF' },
+            { num: 'ix', doc: t.doc9Name, note: t.doc9Req, fmt: 'PDF' },
           ].map((item, i) => (
             <motion.div key={item.num} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.07 }}
               className="group grid grid-cols-12 gap-4 items-start sm:items-center px-5 py-5 border-b border-slate-200 hover:bg-white transition-all cursor-default">

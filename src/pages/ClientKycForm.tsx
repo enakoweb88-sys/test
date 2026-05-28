@@ -164,6 +164,9 @@ const formConfig = {
         icon: FaFileAlt,
         uploads: [
           { name: 'corporateDocuments', label: 'Corporate Documents' },
+          { name: 'idCard', label: 'ID Card' },
+          { name: 'articlesOfAssociation', label: 'Articles of Association' },
+          { name: 'taxpayerCard', label: 'Taxpayer Card' },
           { name: 'bankStatements', label: 'Bank Statements' },
           { name: 'certificateOfIncorporation', label: 'Certificate of Incorporation' },
           { name: 'amlPolicyDocument', label: 'AML Policy Document' },
