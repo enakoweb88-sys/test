@@ -458,14 +458,54 @@ export default function ClientKycForm() {
     return false;
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (!validateStep()) return;
     setLoading(true);
-    window.setTimeout(() => {
-      setLoading(false);
+    try {
+      const API_BASE = (import.meta.env.VITE_API_URL as string) ?? 'http://localhost:5000/api/v1';
+
+      // Build FormData to support file uploads
+      const formData = new FormData();
+      formData.append('applicantType', accountType);
+      formData.append('applicantName',
+        String(form['fullName'] || form['companyName'] || form['primaryContactName'] || 'Unknown'));
+      formData.append('email',
+        String(form['emailAddress'] || form['companyEmail'] || ''));
+      formData.append('phone',
+        String(form['phoneNumber'] || form['primaryPhone'] || ''));
+
+      // Collect all form fields as payload JSON
+      const payload: Record<string, string> = {};
+      Object.entries(form).forEach(([k, v]) => {
+        if (typeof v === 'boolean') payload[k] = String(v);
+        else if (v) payload[k] = String(v);
+      });
+      formData.append('payload', JSON.stringify(payload));
+
+      // Attach uploaded files
+      Object.entries(uploads).forEach(([name, fileInfo]) => {
+        // We only have the preview/name, not the actual File object here
+        // The file was already read as DataURL — send document metadata
+        formData.append('documentMeta', JSON.stringify({ documentType: name, fileName: fileInfo.name }));
+      });
+
+      const res = await fetch(`${API_BASE}/kyc/submissions`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message ?? `Submission failed (${res.status})`);
+      }
+
       setSubmitted(true);
       localStorage.removeItem(config.storageKey);
-    }, 900);
+    } catch (err: any) {
+      alert(err.message ?? 'Submission failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const uploadFile = (name: string, file: File) => {
