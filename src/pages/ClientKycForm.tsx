@@ -130,13 +130,26 @@ const formConfig = {
             title: 'Compliance Framework',
             icon: FaShieldAlt,
             fields: [
-              { name: 'amlPolicies', label: 'AML Policies Summary', required: true, type: 'textarea', placeholder: 'Describe your AML/CTF policies', wide: true },
-              { name: 'complianceOfficer', label: 'Compliance Officer', required: true, placeholder: 'Enter compliance officer name' },
-              { name: 'sourceOfFunds', label: 'Source of Funds', required: true, placeholder: 'Describe source of funds' },
+              { name: 'hasAmlPolicy', label: 'Does your company have an anti-money laundering (AML) policy?', required: true, type: 'yesno', options: ['Yes', 'No'], wide: true },
+              { name: 'hasComplianceOfficer', label: 'Is there a designated AML Compliance Officer?', required: true, type: 'yesno', options: ['Yes', 'No'] },
+              { name: 'complianceOfficerName', label: 'Name of Compliance Officer (If Yes)', placeholder: 'Enter compliance officer name' },
+              { name: 'conductsCddEdd', label: 'Does your company conduct customer due diligence (CDD) and enhanced due diligence (EDD)?', required: true, type: 'yesno', options: ['Yes', 'No'], wide: true },
+              { name: 'employeesTrainedAml', label: 'Are employees trained on AML and KYC procedures?', required: true, type: 'yesno', options: ['Yes', 'No'], wide: true },
+              { name: 'sourceOfFunds', label: 'Source of Funds', required: true, placeholder: 'Describe source of funds', wide: true },
             ],
           },
         ],
-        schema: z.object({ amlPolicies: requiredText, complianceOfficer: requiredText, sourceOfFunds: requiredText }),
+        schema: z.object({
+          hasAmlPolicy: requiredText,
+          hasComplianceOfficer: requiredText,
+          complianceOfficerName: z.string().optional(),
+          conductsCddEdd: requiredText,
+          employeesTrainedAml: requiredText,
+          sourceOfFunds: requiredText,
+        }).refine(data => data.hasComplianceOfficer !== 'Yes' || (data.complianceOfficerName && data.complianceOfficerName.trim().length > 0), {
+          message: 'Please enter the name of the Compliance Officer.',
+          path: ['complianceOfficerName'],
+        }),
       },
       {
         title: 'Banking Information',
@@ -169,7 +182,6 @@ const formConfig = {
           { name: 'taxpayerCard', label: 'Taxpayer Card' },
           { name: 'bankStatements', label: 'Bank Statements' },
           { name: 'certificateOfIncorporation', label: 'Certificate of Incorporation' },
-          { name: 'amlPolicyDocument', label: 'AML Policy Document' },
         ],
         schema: z.object({}),
       },
@@ -353,6 +365,18 @@ function Field({ field, value, error, onChange }: {
       </label>
       {field.type === 'textarea' ? (
         <textarea value={String(value || '')} onChange={e => onChange(field.name, e.target.value)} rows={4} placeholder={field.placeholder} className={baseClass} />
+      ) : field.type === 'yesno' ? (
+        <div className="flex items-center gap-4 mt-1">
+          {field.options?.map(option => (
+            <label key={option} className={`flex-1 flex items-center justify-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all ${value === option ? 'border-[#003061] bg-[#f6f9ff] ring-1 ring-[#003061]' : 'border-[#d9e5f5] bg-white hover:border-[#003061]'}`}>
+              <input type="radio" name={field.name} value={option} checked={value === option} onChange={e => onChange(field.name, e.target.value)} className="hidden" />
+              <div className={`h-4 w-4 rounded-full border flex items-center justify-center ${value === option ? 'border-[#003061]' : 'border-[#d9e5f5]'}`}>
+                {value === option && <div className="h-2 w-2 rounded-full bg-[#003061]" />}
+              </div>
+              <span className={`text-sm font-bold ${value === option ? 'text-[#003061]' : 'text-[#07112b]'}`}>{option}</span>
+            </label>
+          ))}
+        </div>
       ) : field.type === 'select' ? (
         <select value={String(value || '')} onChange={e => onChange(field.name, e.target.value)} className={baseClass}>
           <option value="">{field.placeholder || `Select ${field.label.toLowerCase()}`}</option>
@@ -646,6 +670,11 @@ export default function ClientKycForm() {
                     {group.fields.map(field => (
                       <div key={field.name} className={'wide' in field && field.wide ? 'md:col-span-2' : ''}>
                         <Field field={field} value={form[field.name]} error={errors[field.name]} onChange={(name, value) => setValue(name, value, { shouldDirty: true, shouldTouch: true })} />
+                        {field.name === 'hasAmlPolicy' && form.hasAmlPolicy === 'Yes' && (
+                          <div className="mt-5 max-w-sm">
+                             <UploadCard label="Upload AML Policy Document" file={uploads['amlPolicyDocument']} onChange={file => uploadFile('amlPolicyDocument', file)} />
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
