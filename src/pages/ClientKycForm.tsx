@@ -504,9 +504,10 @@ export default function ClientKycForm() {
     setLoading(true);
     try {
       const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       const API_BASE = (envApiUrl && envApiUrl !== 'undefined') 
         ? envApiUrl 
-        : (window.location.hostname === 'localhost' 
+        : (isLocal 
             ? 'http://localhost:5000/api/v1' 
             : 'https://enako-backend-production.up.railway.app/api/v1'); // Replace this placeholder if it doesn't match your actual Railway URL
 
