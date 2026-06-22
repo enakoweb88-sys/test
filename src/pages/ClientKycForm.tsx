@@ -509,7 +509,7 @@ export default function ClientKycForm() {
         ? envApiUrl 
         : (isLocal 
             ? 'http://localhost:5000/api/v1' 
-            : 'https://enako-backend-production.up.railway.app/api/v1'); // Replace this placeholder if it doesn't match your actual Railway URL
+            : 'https://backend-production-e10c8.up.railway.app/api/v1');
 
       // Build FormData to support file uploads
       const formData = new FormData();
