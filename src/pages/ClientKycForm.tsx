@@ -546,6 +546,14 @@ export default function ClientKycForm() {
         throw new Error(err.message ?? `Submission failed (${res.status})`);
       }
 
+      // Ensure we actually hit an API, not a Vercel 200 OK index.html fallback
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('API Configuration Error: The request hit a frontend route instead of the backend API. Please ensure VITE_API_URL is correctly set in Vercel.');
+      }
+      
+      await res.json(); // ensure it parses
+
       setSubmitted(true);
       localStorage.removeItem(config.storageKey);
     } catch (err: any) {
