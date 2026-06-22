@@ -25,8 +25,18 @@ type FormState = Record<string, string | boolean>;
 type UploadState = Record<string, { name: string; preview?: string }>;
 
 const requiredText = z.string().trim().min(2, 'This field is required.');
+const requiredName = z.string().trim().min(2, 'Name is required').regex(/^[A-Za-z\s\-\']+$/, 'Name can only contain letters, spaces, hyphens, and apostrophes.');
 const requiredEmail = z.string().trim().email('Enter a valid email address.');
 const requiredDate = z.string().trim().min(1, 'Select a valid date.');
+const requiredPhone = z.string().trim().refine(val => {
+  const stripped = val.replace(/[\s-()]/g, '');
+  if (stripped.startsWith('+237')) {
+    return /^\+237[23468]\d{8}$/.test(stripped);
+  }
+  return /^\+?\d{10,15}$/.test(stripped);
+}, 'Invalid phone number. If Cameroon, use +237 followed by exactly 9 digits.');
+const requiredIdNumber = z.string().trim().min(5, 'ID number must be at least 5 characters.').regex(/^[A-Za-z0-9\-\s]+$/, 'Invalid ID format.');
+const requiredAccountNumber = z.string().trim().min(8, 'Account number must be at least 8 digits.').regex(/^\d+$/, 'Account number must contain only digits.');
 const agreement = z.literal(true, { message: 'You must accept the declaration.' });
 
 const formConfig = {
@@ -82,9 +92,9 @@ const formConfig = {
           },
         ],
         schema: z.object({
-          companyName: requiredText,
-          registrationNumber: requiredText,
-          taxNumber: requiredText,
+          companyName: requiredName,
+          registrationNumber: requiredIdNumber,
+          taxNumber: requiredIdNumber,
           incorporationDate: requiredDate,
           companyType: requiredText,
           businessAddress: requiredText,
@@ -96,9 +106,9 @@ const formConfig = {
           industry: requiredText,
           businessActivity: requiredText,
           annualRevenue: requiredText,
-          primaryContactName: requiredText,
+          primaryContactName: requiredName,
           companyEmail: requiredEmail,
-          primaryPhone: requiredText,
+          primaryPhone: requiredPhone,
           jobTitle: requiredText,
         }),
       },
@@ -168,7 +178,7 @@ const formConfig = {
             ],
           },
         ],
-        schema: z.object({ bankName: requiredText, accountName: requiredText, accountNumber: requiredText, bankCountry: requiredText }),
+        schema: z.object({ bankName: requiredText, accountName: requiredName, accountNumber: requiredAccountNumber, bankCountry: requiredText }),
       },
       {
         title: 'Document Uploads',
@@ -231,11 +241,11 @@ const formConfig = {
           },
         ],
         schema: z.object({
-          fullName: requiredText,
+          fullName: requiredName,
           dateOfBirth: requiredDate,
           nationality: requiredText,
           gender: requiredText,
-          phoneNumber: requiredText,
+          phoneNumber: requiredPhone,
           emailAddress: requiredEmail,
           residentialAddress: requiredText,
         }),
@@ -256,7 +266,7 @@ const formConfig = {
             ],
           },
         ],
-        schema: z.object({ idType: requiredText, idNumber: requiredText, expiryDate: requiredDate }),
+        schema: z.object({ idType: requiredText, idNumber: requiredIdNumber, expiryDate: requiredDate }),
       },
       {
         title: 'Employment Information',
@@ -292,7 +302,7 @@ const formConfig = {
             ],
           },
         ],
-        schema: z.object({ bankName: requiredText, accountName: requiredText, accountNumber: requiredText }),
+        schema: z.object({ bankName: requiredText, accountName: requiredName, accountNumber: requiredAccountNumber }),
       },
       {
         title: 'Document Upload',
@@ -383,7 +393,14 @@ function Field({ field, value, error, onChange }: {
           {field.options?.map(option => <option key={option}>{option}</option>)}
         </select>
       ) : (
-        <input type={field.type || 'text'} value={String(value || '')} onChange={e => onChange(field.name, e.target.value)} placeholder={field.placeholder} className={baseClass} />
+        <input 
+          type={field.type || 'text'} 
+          value={String(value || '')} 
+          onChange={e => onChange(field.name, e.target.value)} 
+          placeholder={field.placeholder} 
+          className={baseClass} 
+          {...(field.type === 'date' ? { min: '1900-01-01', max: '2099-12-31' } : {})}
+        />
       )}
       {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
     </div>
@@ -486,7 +503,12 @@ export default function ClientKycForm() {
     if (!validateStep()) return;
     setLoading(true);
     try {
-      const API_BASE = (import.meta.env.VITE_API_URL as string) ?? 'http://localhost:5000/api/v1';
+      const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
+      const API_BASE = (envApiUrl && envApiUrl !== 'undefined') 
+        ? envApiUrl 
+        : (window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000/api/v1' 
+            : 'https://enako-backend-production.up.railway.app/api/v1'); // Replace this placeholder if it doesn't match your actual Railway URL
 
       // Build FormData to support file uploads
       const formData = new FormData();
