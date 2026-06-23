@@ -22,7 +22,7 @@ import {
 
 type AccountType = 'company' | 'individual';
 type FormState = Record<string, string | boolean>;
-type UploadState = Record<string, { name: string; preview?: string }>;
+type UploadState = Record<string, { name: string; preview?: string, file?: File }>;
 
 const requiredText = z.string().trim().min(2, 'This field is required.');
 const requiredName = z.string().trim().min(2, 'Name is required').regex(/^[A-Za-z\s\-\']+$/, 'Name can only contain letters, spaces, hyphens, and apostrophes.');
@@ -531,9 +531,11 @@ export default function ClientKycForm() {
 
       // Attach uploaded files
       Object.entries(uploads).forEach(([name, fileInfo]) => {
-        // We only have the preview/name, not the actual File object here
-        // The file was already read as DataURL — send document metadata
-        formData.append('documentMeta', JSON.stringify({ documentType: name, fileName: fileInfo.name }));
+        if (fileInfo.file) {
+          formData.append(name, fileInfo.file, fileInfo.name);
+        } else {
+          formData.append('documentMeta', JSON.stringify({ documentType: name, fileName: fileInfo.name }));
+        }
       });
 
       const res = await fetch(`${API_BASE}/kyc/submissions`, {
@@ -566,11 +568,11 @@ export default function ClientKycForm() {
   const uploadFile = (name: string, file: File) => {
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = () => setUploads(prev => ({ ...prev, [name]: { name: file.name, preview: String(reader.result) } }));
+      reader.onload = () => setUploads(prev => ({ ...prev, [name]: { name: file.name, preview: String(reader.result), file } }));
       reader.readAsDataURL(file);
       return;
     }
-    setUploads(prev => ({ ...prev, [name]: { name: file.name } }));
+    setUploads(prev => ({ ...prev, [name]: { name: file.name, file } }));
   };
 
   const completedSteps = useMemo(() => config.steps.map((item, index) => ({
