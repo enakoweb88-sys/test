@@ -30,11 +30,11 @@ const requiredEmail = z.string().trim().email('Enter a valid email address.');
 const requiredDate = z.string().trim().min(1, 'Select a valid date.');
 const requiredPhone = z.string().trim().refine(val => {
   const stripped = val.replace(/[\s-()]/g, '');
-  if (stripped.startsWith('+237')) {
-    return /^\+237[23468]\d{8}$/.test(stripped);
+  if (stripped.startsWith('+')) {
+    return /^\+?[1-9]\d{6,14}$/.test(stripped);
   }
-  return /^\+?\d{10,15}$/.test(stripped);
-}, 'Invalid phone number. If Cameroon, use +237 followed by exactly 9 digits.');
+  return /^\d{9,15}$/.test(stripped);
+}, 'Enter a valid phone number with 9 to 15 digits.');
 const requiredIdNumber = z.string().trim().min(5, 'ID number must be at least 5 characters.').regex(/^[A-Za-z0-9\-\s]+$/, 'Invalid ID format.');
 const requiredAccountNumber = z.string().trim().min(8, 'Account number must be at least 8 digits.').regex(/^\d+$/, 'Account number must contain only digits.');
 const agreement = z.literal(true, { message: 'You must accept the declaration.' });
@@ -407,34 +407,38 @@ function Field({ field, value, error, onChange }: {
   );
 }
 
-function UploadCard({ label, file, onChange }: {
+function UploadCard({ label, file, error, onChange }: {
   label: string;
   file?: { name: string; preview?: string };
+  error?: string;
   onChange: (file: File) => void;
 }) {
   return (
-    <label className="group min-h-48 rounded-2xl border-2 border-dashed border-[#d9e5f5] bg-white hover:border-[#003061] hover:bg-[#f6f9ff] transition-all p-5 flex flex-col justify-between cursor-pointer">
-      <input
-        type="file"
-        accept=".pdf,.jpg,.jpeg,.png"
-        className="hidden"
-        onChange={e => {
-          const selected = e.target.files?.[0];
-          if (selected) onChange(selected);
-        }}
-      />
-      {file?.preview ? (
-        <img src={file.preview} alt="" className="h-24 w-full rounded-2xl object-cover mb-4" />
-      ) : (
-        <div className="h-24 rounded-2xl bg-[#003061]/6 flex items-center justify-center text-[#003061] mb-4 group-hover:scale-[1.02] transition-transform">
-          <FaCloudUploadAlt className="text-3xl" />
+    <div className="flex flex-col gap-1">
+      <label className={`group min-h-48 rounded-2xl border-2 border-dashed ${error ? 'border-red-400 bg-red-50' : 'border-[#d9e5f5] bg-white hover:border-[#003061] hover:bg-[#f6f9ff]'} transition-all p-5 flex flex-col justify-between cursor-pointer`}>
+        <input
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png"
+          className="hidden"
+          onChange={e => {
+            const selected = e.target.files?.[0];
+            if (selected) onChange(selected);
+          }}
+        />
+        {file?.preview ? (
+          <img src={file.preview} alt="" className="h-24 w-full rounded-2xl object-cover mb-4" />
+        ) : (
+          <div className={`h-24 rounded-2xl ${error ? 'bg-red-100 text-red-500' : 'bg-[#003061]/6 text-[#003061]'} flex items-center justify-center mb-4 group-hover:scale-[1.02] transition-transform`}>
+            <FaCloudUploadAlt className="text-3xl" />
+          </div>
+        )}
+        <div>
+          <div className={`text-sm font-extrabold ${error ? 'text-red-700' : 'text-[#07112b]'}`}>{label}</div>
+          <div className={`text-xs mt-1 break-all ${error ? 'text-red-500 font-semibold' : 'text-slate-400'}`}>{file?.name || 'PDF, JPG, or PNG up to 10MB'}</div>
         </div>
-      )}
-      <div>
-        <div className="text-sm font-extrabold text-[#07112b]">{label}</div>
-        <div className="text-xs text-slate-400 mt-1 break-all">{file?.name || 'PDF, JPG, or PNG up to 10MB'}</div>
-      </div>
-    </label>
+      </label>
+      {error && <span className="text-xs text-red-500 font-medium px-2">{error}</span>}
+    </div>
   );
 }
 
@@ -485,18 +489,36 @@ export default function ClientKycForm() {
   const progress = Math.round(((stepIndex + 1) / config.steps.length) * 100);
 
   const validateStep = () => {
-    const result = step.schema.safeParse(form);
-    if (result.success) {
-      setErrors({});
-      return true;
-    }
+    let isValid = true;
     const nextErrors: Record<string, string> = {};
-    result.error.issues.forEach(issue => {
-      const key = String(issue.path[0]);
-      nextErrors[key] = issue.message;
-    });
+
+    const result = step.schema.safeParse(form);
+    if (!result.success) {
+      isValid = false;
+      result.error.issues.forEach(issue => {
+        const key = String(issue.path[0]);
+        nextErrors[key] = issue.message;
+      });
+    }
+
+    if ('uploads' in step && step.uploads) {
+      step.uploads.forEach(upload => {
+        if (!uploads[upload.name]) {
+          isValid = false;
+          nextErrors[upload.name] = 'This document is required.';
+        }
+      });
+    }
+
+    if (accountType === 'company' && step.short === 'AML & Compliance') {
+      if (form.hasAmlPolicy === 'Yes' && !uploads['amlPolicyDocument']) {
+        isValid = false;
+        nextErrors['amlPolicyDocument'] = 'Please upload your AML policy.';
+      }
+    }
+
     setErrors(nextErrors);
-    return false;
+    return isValid;
   };
 
   const submit = async () => {
@@ -702,10 +724,21 @@ export default function ClientKycForm() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {group.fields.map(field => (
                       <div key={field.name} className={'wide' in field && field.wide ? 'md:col-span-2' : ''}>
-                        <Field field={field} value={form[field.name]} error={errors[field.name]} onChange={(name, value) => setValue(name, value, { shouldDirty: true, shouldTouch: true })} />
+                        <Field field={field} value={form[field.name]} error={errors[field.name]} onChange={(name, value) => {
+                          setValue(name, value, { shouldDirty: true, shouldTouch: true });
+                          if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+                        }} />
                         {field.name === 'hasAmlPolicy' && form.hasAmlPolicy === 'Yes' && (
                           <div className="mt-5 max-w-sm">
-                             <UploadCard label="Upload AML Policy Document" file={uploads['amlPolicyDocument']} onChange={file => uploadFile('amlPolicyDocument', file)} />
+                             <UploadCard 
+                               label="Upload AML Policy Document" 
+                               file={uploads['amlPolicyDocument']} 
+                               error={errors['amlPolicyDocument']}
+                               onChange={file => {
+                                 uploadFile('amlPolicyDocument', file);
+                                 if (errors['amlPolicyDocument']) setErrors(prev => ({ ...prev, amlPolicyDocument: '' }));
+                               }} 
+                             />
                           </div>
                         )}
                       </div>
@@ -722,7 +755,16 @@ export default function ClientKycForm() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {step.uploads.map(upload => (
-                      <UploadCard key={upload.name} label={upload.label} file={uploads[upload.name]} onChange={file => uploadFile(upload.name, file)} />
+                      <UploadCard 
+                        key={upload.name} 
+                        label={upload.label} 
+                        file={uploads[upload.name]} 
+                        error={errors[upload.name]}
+                        onChange={file => {
+                          uploadFile(upload.name, file);
+                          if (errors[upload.name]) setErrors(prev => ({ ...prev, [upload.name]: '' }));
+                        }} 
+                      />
                     ))}
                   </div>
                 </section>

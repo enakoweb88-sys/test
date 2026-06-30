@@ -23,6 +23,7 @@ import CompliancePolicy from './pages/CompliancePolicy';
 import TermsOfService from './pages/TermsOfService';
 import Register from './pages/Register';
 import ClientKycForm from './pages/ClientKycForm';
+import SimpleLanding from './pages/SimpleLanding';
 import { InfoPage } from './pages/MarketingPages';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
@@ -1273,7 +1274,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<SimpleLanding />} />
         <Route path="/about" element={<InfoPage type="about" />} />
         <Route path="/why-kyc" element={<InfoPage type="why" />} />
         <Route path="/process" element={<InfoPage type="process" />} />
