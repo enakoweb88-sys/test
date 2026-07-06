@@ -720,7 +720,7 @@ const TRANSLATIONS = {
 };
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
-function LandingPage() {
+export function LandingPage() {
   const navigate = useNavigate();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [lang, setLang] = useState<'en' | 'fr'>(() => {
