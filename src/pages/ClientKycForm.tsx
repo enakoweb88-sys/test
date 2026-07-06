@@ -463,6 +463,7 @@ export default function ClientKycForm() {
   const accountType: AccountType = params.type === 'individual' ? 'individual' : 'company';
   const config = formConfig[accountType];
   const [stepIndex, setStepIndex] = useState(0);
+  const [groupIndex, setGroupIndex] = useState(0);
   const [uploads, setUploads] = useState<UploadState>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -478,6 +479,7 @@ export default function ClientKycForm() {
     reset(saved ? { ...emptyState(accountType), ...JSON.parse(saved) } : emptyState(accountType));
     setUploads({});
     setStepIndex(0);
+    setGroupIndex(0);
     setSubmitted(false);
   }, [accountType, config.storageKey, reset]);
 
@@ -486,34 +488,45 @@ export default function ClientKycForm() {
   }, [form, config.storageKey]);
 
   const step = config.steps[stepIndex];
+  const totalGroupsForStep = ('groups' in step && (step as any).groups ? (step as any).groups.length : 0) + ('uploads' in step && (step as any).uploads && (step as any).uploads.length > 0 ? 1 : 0);
   const progress = Math.round(((stepIndex + 1) / config.steps.length) * 100);
 
-  const validateStep = () => {
+  const validateCurrentView = () => {
     let isValid = true;
     const nextErrors: Record<string, string> = {};
 
-    const result = step.schema.safeParse(form);
-    if (!result.success) {
-      isValid = false;
-      result.error.issues.forEach(issue => {
-        const key = String(issue.path[0]);
-        nextErrors[key] = issue.message;
-      });
-    }
+    const hasGroups = 'groups' in step && (step as any).groups && (step as any).groups.length > 0;
+    const isUploadsView = !hasGroups || groupIndex === (step as any).groups.length;
 
-    if ('uploads' in step && step.uploads) {
-      step.uploads.forEach(upload => {
-        if (!uploads[upload.name]) {
+    if (!isUploadsView && hasGroups) {
+      const currentGroup = (step as any).groups[groupIndex];
+      const currentFields = currentGroup.fields.map((f: any) => f.name);
+      
+      const result = step.schema.safeParse(form);
+      if (!result.success) {
+        result.error.issues.forEach(issue => {
+          const key = String(issue.path[0]);
+          if ((currentFields as string[]).includes(key)) {
+            isValid = false;
+            nextErrors[key] = issue.message;
+          }
+        });
+      }
+
+      if (currentFields.includes('hasAmlPolicy') && form.hasAmlPolicy === 'Yes') {
+        if (!uploads['amlPolicyDocument']) {
           isValid = false;
-          nextErrors[upload.name] = 'This document is required.';
+          nextErrors['amlPolicyDocument'] = 'Please upload your AML policy.';
         }
-      });
-    }
-
-    if (accountType === 'company' && step.short === 'AML & Compliance') {
-      if (form.hasAmlPolicy === 'Yes' && !uploads['amlPolicyDocument']) {
-        isValid = false;
-        nextErrors['amlPolicyDocument'] = 'Please upload your AML policy.';
+      }
+    } else if (isUploadsView) {
+      if ('uploads' in step && step.uploads) {
+        step.uploads.forEach(upload => {
+          if (!uploads[upload.name]) {
+            isValid = false;
+            nextErrors[upload.name] = 'This document is required.';
+          }
+        });
       }
     }
 
@@ -522,7 +535,7 @@ export default function ClientKycForm() {
   };
 
   const submit = async () => {
-    if (!validateStep()) return;
+    if (!validateCurrentView()) return;
     setLoading(true);
     try {
       const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
@@ -676,14 +689,17 @@ export default function ClientKycForm() {
               transition={{ duration: 0.22 }}
               className="space-y-5"
             >
-              {'groups' in step && step.groups.map(group => (
-                <section key={group.title} className="bg-white border border-[#d9e5f5] rounded-2xl p-5 sm:p-7 shadow-[0_16px_45px_rgba(15,23,42,0.04)]">
+              {'groups' in step && (step as any).groups && (step as any).groups.length > 0 && groupIndex < (step as any).groups.length && (
+                <section key={(step as any).groups[groupIndex].title} className="bg-white border border-[#d9e5f5] rounded-2xl p-5 sm:p-7 shadow-[0_16px_45px_rgba(15,23,42,0.04)]">
                   <div className="flex items-center gap-3 mb-6">
-                    <group.icon className="text-[#2563eb]" />
-                    <h2 className="text-xl font-extrabold text-[#07112b]">{group.title}</h2>
+                    {(() => {
+                      const Icon = (step as any).groups[groupIndex].icon;
+                      return <Icon className="text-[#2563eb]" />;
+                    })()}
+                    <h2 className="text-xl font-extrabold text-[#07112b]">{(step as any).groups[groupIndex].title}</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {group.fields.map(field => (
+                    {(step as any).groups[groupIndex].fields.map((field: any) => (
                       <div key={field.name} className={'wide' in field && field.wide ? 'md:col-span-2' : ''}>
                         <Field field={field} value={form[field.name]} error={errors[field.name]} onChange={(name, value) => {
                           setValue(name, value, { shouldDirty: true, shouldTouch: true });
@@ -706,16 +722,16 @@ export default function ClientKycForm() {
                     ))}
                   </div>
                 </section>
-              ))}
+              )}
 
-              {'uploads' in step && (
+              {'uploads' in step && (step as any).uploads && (step as any).uploads.length > 0 && groupIndex === ('groups' in step && (step as any).groups ? (step as any).groups.length : 0) && (
                 <section className="bg-white border border-[#d9e5f5] rounded-2xl p-5 sm:p-7 shadow-[0_16px_45px_rgba(15,23,42,0.04)]">
                   <div className="flex items-center gap-3 mb-6">
                     <FaFileAlt className="text-[#2563eb]" />
                     <h2 className="text-xl font-extrabold text-[#07112b]">Required Documents</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {step.uploads.map(upload => (
+                    {(step as any).uploads.map((upload: any) => (
                       <UploadCard 
                         key={upload.name} 
                         label={upload.label} 
@@ -736,13 +752,22 @@ export default function ClientKycForm() {
           <div className="mt-5 bg-white border border-[#d9e5f5] rounded-2xl p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <button
               type="button"
-              onClick={() => setStepIndex(index => Math.max(0, index - 1))}
-              disabled={stepIndex === 0}
+              onClick={() => {
+                if (groupIndex > 0) {
+                  setGroupIndex(g => g - 1);
+                } else if (stepIndex > 0) {
+                  const prevStep = config.steps[stepIndex - 1];
+                  const prevTotalGroups = ('groups' in prevStep && (prevStep as any).groups ? (prevStep as any).groups.length : 0) + ('uploads' in prevStep && (prevStep as any).uploads && (prevStep as any).uploads.length > 0 ? 1 : 0);
+                  setStepIndex(stepIndex - 1);
+                  setGroupIndex(prevTotalGroups - 1);
+                }
+              }}
+              disabled={stepIndex === 0 && groupIndex === 0}
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[#d9e5f5] text-sm font-extrabold text-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <FaArrowLeft /> Back
             </button>
-            {stepIndex === config.steps.length - 1 ? (
+            {stepIndex === config.steps.length - 1 && groupIndex === totalGroupsForStep - 1 ? (
               <button type="button" onClick={submit} disabled={loading} className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold disabled:opacity-70">
                 {loading ? <FaSpinner className="animate-spin" /> : <FaCheck />}
                 Submit Application
@@ -750,7 +775,16 @@ export default function ClientKycForm() {
             ) : (
               <button
                 type="button"
-                onClick={() => validateStep() && setStepIndex(index => Math.min(config.steps.length - 1, index + 1))}
+                onClick={() => {
+                  if (validateCurrentView()) {
+                    if (groupIndex < totalGroupsForStep - 1) {
+                      setGroupIndex(g => g + 1);
+                    } else {
+                      setStepIndex(s => s + 1);
+                      setGroupIndex(0);
+                    }
+                  }
+                }}
                 className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold"
               >
                 Save & Continue <FaArrowRight />
