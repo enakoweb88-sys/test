@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
@@ -597,14 +597,6 @@ export default function ClientKycForm() {
     setUploads(prev => ({ ...prev, [name]: { name: file.name, file } }));
   };
 
-  const completedSteps = useMemo(() => config.steps.map((item, index) => ({
-    title: item.title,
-    short: item.short,
-    description: item.description,
-    icon: item.icon,
-    active: index === stepIndex,
-    done: index < stepIndex,
-  })), [config.steps, stepIndex]);
 
   if (submitted) {
     return (
@@ -642,24 +634,7 @@ export default function ClientKycForm() {
             </div>
           </div>
 
-          <div className="rounded-2xl bg-white border border-[#d9e5f5] p-3 shadow-[0_16px_45px_rgba(15,23,42,0.05)]">
-            {completedSteps.map((item, index) => (
-              <button
-                type="button"
-                key={item.title}
-                onClick={() => setStepIndex(index)}
-                className={`w-full flex items-start gap-4 rounded-xl p-4 text-left transition-all ${item.active ? 'bg-[#eef4ff] shadow-sm' : 'hover:bg-[#f6f9ff]'}`}
-              >
-                <span className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-extrabold shrink-0 border ${item.active ? 'bg-[#2563eb] text-white border-[#2563eb]' : item.done ? 'bg-[#003061] text-white border-[#003061]' : 'bg-white text-[#07112b] border-[#d9e5f5]'}`}>
-                  {item.done ? <FaCheck className="text-xs" /> : index + 1}
-                </span>
-                <span>
-                  <span className={`block text-sm font-extrabold ${item.active ? 'text-[#2563eb]' : 'text-[#07112b]'}`}>{item.title}</span>
-                  <span className="block text-xs text-slate-500 leading-5 mt-1">{item.description}</span>
-                </span>
-              </button>
-            ))}
-          </div>
+
 
           <div className="rounded-2xl bg-[#eef4ff] border border-[#d9e5f5] p-6">
             <FaHeadset className="text-2xl text-[#2563eb] mb-5" />
@@ -690,21 +665,7 @@ export default function ClientKycForm() {
             <p className="text-slate-600">{step.description}</p>
           </div>
 
-          <div className="hidden md:grid grid-cols-6 items-start gap-0 mb-9">
-            {completedSteps.map((item, index) => (
-              <div key={item.title} className="relative flex flex-col items-center text-center">
-                {index < completedSteps.length - 1 && <div className="absolute top-5 left-1/2 w-full h-px bg-[#d9e5f5]" />}
-                <button
-                  type="button"
-                  onClick={() => setStepIndex(index)}
-                  className={`relative z-10 h-10 w-10 rounded-full border flex items-center justify-center text-sm font-extrabold ${item.active ? 'bg-[#2563eb] text-white border-[#2563eb]' : item.done ? 'bg-[#003061] text-white border-[#003061]' : 'bg-white text-[#07112b] border-[#d9e5f5]'}`}
-                >
-                  {item.done ? <FaCheck className="text-xs" /> : index + 1}
-                </button>
-                <div className="text-xs font-bold text-[#07112b] mt-3">{item.short}</div>
-              </div>
-            ))}
-          </div>
+
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -777,9 +738,9 @@ export default function ClientKycForm() {
               type="button"
               onClick={() => setStepIndex(index => Math.max(0, index - 1))}
               disabled={stepIndex === 0}
-              className="px-5 py-3 rounded-xl border border-[#d9e5f5] text-sm font-extrabold text-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[#d9e5f5] text-sm font-extrabold text-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Save & Exit
+              <FaArrowLeft /> Back
             </button>
             {stepIndex === config.steps.length - 1 ? (
               <button type="button" onClick={submit} disabled={loading} className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold disabled:opacity-70">
