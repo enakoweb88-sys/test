@@ -649,7 +649,7 @@ export default function ClientKycForm() {
 
 
 
-          <div className="rounded-2xl bg-[#eef4ff] border border-[#d9e5f5] p-6">
+          <div className="hidden lg:block rounded-2xl bg-[#eef4ff] border border-[#d9e5f5] p-6">
             <FaHeadset className="text-2xl text-[#2563eb] mb-5" />
             <h3 className="font-extrabold text-[#07112b] mb-2">Need Help?</h3>
             <p className="text-sm text-slate-600 leading-6 mb-5">Our support team is here to help you with your onboarding.</p>
