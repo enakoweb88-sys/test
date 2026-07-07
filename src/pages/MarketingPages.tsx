@@ -283,6 +283,28 @@ export function InfoPage({ type }: { type: keyof typeof pageData }) {
 export function MarketingContact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const url = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1');
+      const res = await fetch(`${url}/tickets/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      if (!res.ok) throw new Error('Failed to send message');
+      setSubmitted(true);
+      setForm({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      console.error(error);
+      alert('Error sending message. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <PageShell
@@ -320,7 +342,7 @@ export function MarketingContact() {
             <button onClick={() => setSubmitted(false)} className="rounded-xl bg-[#003061] text-white font-extrabold px-7 py-3">Send Another Message</button>
           </div>
         ) : (
-          <form onSubmit={e => { e.preventDefault(); setSubmitted(true); }} className="bg-white border border-[#d9e5f5] rounded-[2rem] p-6 sm:p-8 space-y-5 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">
+          <form onSubmit={handleSubmit} className="bg-white border border-[#d9e5f5] rounded-[2rem] p-6 sm:p-8 space-y-5 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <TextInput label="Full Name" value={form.name} onChange={value => setForm({ ...form, name: value })} placeholder="Your full name" />
               <TextInput label="Email Address" type="email" value={form.email} onChange={value => setForm({ ...form, email: value })} placeholder="you@company.com" />
@@ -330,7 +352,9 @@ export function MarketingContact() {
               <label className="block text-xs font-extrabold uppercase tracking-widest text-slate-400 mb-2">Message</label>
               <textarea required rows={5} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Describe your query in detail..." className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-[#003061] focus:ring-2 focus:ring-[#003061]/10 text-sm" />
             </div>
-            <button className="w-full rounded-xl bg-[#003061] text-white font-extrabold py-4 hover:bg-[#002347]">Send Message</button>
+            <button disabled={loading} className="w-full rounded-xl bg-[#003061] text-white font-extrabold py-4 hover:bg-[#002347] disabled:opacity-50">
+              {loading ? 'Sending...' : 'Send Message'}
+            </button>
           </form>
         )}
       </section>
