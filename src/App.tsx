@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import { LangProvider, useLang } from './LangContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaWhatsapp,
@@ -723,11 +724,10 @@ const TRANSLATIONS = {
 export function LandingPage() {
   const navigate = useNavigate();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [lang, setLang] = useState<'en' | 'fr'>(() => {
-    return (localStorage.getItem('enako_language') as 'en' | 'fr') || 'en';
-  });
+  const { lang, setLang: setSharedLang } = useLang();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
+  const setLang = (l: 'en' | 'fr') => { setSharedLang(l); };
   const t = TRANSLATIONS[lang];
 
   const fadeUp = {
@@ -1272,23 +1272,25 @@ export function LandingPage() {
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SimpleLanding />} />
-        <Route path="/about" element={<InfoPage type="about" />} />
-        <Route path="/why-kyc" element={<InfoPage type="why" />} />
-        <Route path="/process" element={<InfoPage type="process" />} />
-        <Route path="/security" element={<InfoPage type="security" />} />
-        <Route path="/faq" element={<InfoPage type="faq" />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/register/:type" element={<ClientKycForm />} />
-        <Route path="/form" element={<Navigate to="/register" replace />} />
-        <Route path="/legacy-form" element={<KYCForm />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/compliance-policy" element={<CompliancePolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-      </Routes>
-      <WhatsAppWidget />
-    </BrowserRouter>
+    <LangProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SimpleLanding />} />
+          <Route path="/about" element={<InfoPage type="about" />} />
+          <Route path="/why-kyc" element={<InfoPage type="why" />} />
+          <Route path="/process" element={<InfoPage type="process" />} />
+          <Route path="/security" element={<InfoPage type="security" />} />
+          <Route path="/faq" element={<InfoPage type="faq" />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register/:type" element={<ClientKycForm />} />
+          <Route path="/form" element={<Navigate to="/register" replace />} />
+          <Route path="/legacy-form" element={<KYCForm />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/compliance-policy" element={<CompliancePolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+        </Routes>
+        <WhatsAppWidget />
+      </BrowserRouter>
+    </LangProvider>
   );
 }

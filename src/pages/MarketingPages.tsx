@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useLang } from '../LangContext';
 import {
   FaArrowRight,
   FaBars,
@@ -17,16 +18,64 @@ import {
   FaUserCheck,
 } from 'react-icons/fa';
 
-const navItems = [
-  { label: 'Home', path: '/' },
-  { label: 'About', path: '/about' },
-  { label: 'Why KYC', path: '/why-kyc' },
-  { label: 'Process', path: '/process' },
-  { label: 'Security', path: '/security' },
-  { label: 'FAQ', path: '/faq' },
-  { label: 'Contact', path: '/contact' },
-];
+const NAV_LABELS = {
+  en: ['Home', 'About', 'Why KYC', 'Process', 'Security', 'FAQ', 'Contact'],
+  fr: ['Accueil', 'À propos', 'Pourquoi KYC', 'Processus', 'Sécurité', 'FAQ', 'Contact'],
+};
+const NAV_PATHS = ['/', '/about', '/why-kyc', '/process', '/security', '/faq', '/contact'];
 
+const MARKETING_TEXTS = {
+  en: {
+    getStarted: 'Get Started',
+    pages: 'Pages',
+    contact: 'Contact',
+    footerDesc: 'Secure, compliant, and professional KYC onboarding for individuals and companies.',
+    overview: 'Overview',
+    startSecurely: 'Start securely',
+    readyKYC: 'Ready to complete your KYC?',
+    messageSent: 'Message Sent',
+    messageSentDesc: 'Thank you. A member of our compliance team will respond within 1 business day.',
+    sendAnother: 'Send Another Message',
+    sendMessage: 'Send Message',
+    sending: 'Sending...',
+    fullName: 'Full Name',
+    emailAddress: 'Email Address',
+    subject: 'Subject',
+    message: 'Message',
+    namePlaceholder: 'Your full name',
+    emailPlaceholder: 'you@company.com',
+    subjectPlaceholder: 'e.g. KYC form query',
+    messagePlaceholder: 'Describe your query in detail...',
+    officeHours: 'Mon - Fri, 9am - 5pm GMT',
+    secureWorkspace: 'Secure onboarding workspace',
+    secureWorkspaceDesc: 'Built around trust, document clarity, and compliance review.',
+  },
+  fr: {
+    getStarted: 'Commencer',
+    pages: 'Pages',
+    contact: 'Contact',
+    footerDesc: 'Intégration KYC sécurisée, conforme et professionnelle pour les particuliers et les entreprises.',
+    overview: 'Aperçu',
+    startSecurely: 'Commencer en toute sécurité',
+    readyKYC: 'Prêt à compléter votre KYC ?',
+    messageSent: 'Message Envoyé',
+    messageSentDesc: 'Merci. Un membre de notre équipe de conformité répondra dans un délai d\'un jour ouvrable.',
+    sendAnother: 'Envoyer un Autre Message',
+    sendMessage: 'Envoyer le Message',
+    sending: 'Envoi en cours...',
+    fullName: 'Nom Complet',
+    emailAddress: 'Adresse Email',
+    subject: 'Sujet',
+    message: 'Message',
+    namePlaceholder: 'Votre nom complet',
+    emailPlaceholder: 'vous@societe.com',
+    subjectPlaceholder: 'ex. Question sur le formulaire KYC',
+    messagePlaceholder: 'Décrivez votre demande en détail...',
+    officeHours: 'Lun - Ven, 9h - 17h GMT',
+    secureWorkspace: 'Espace de travail sécurisé',
+    secureWorkspaceDesc: 'Conçu autour de la confiance, la clarté des documents et la révision de conformité.',
+  },
+};
 const contactPhone = '+237 6 70 67 12 49';
 const websiteUrl = 'https://www.enako.cm';
 const websiteLabel = 'www.enako.cm';
@@ -34,6 +83,10 @@ const websiteLabel = 'www.enako.cm';
 export function MarketingHeader() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const { lang } = useLang();
+  const labels = NAV_LABELS[lang];
+  const mt = MARKETING_TEXTS[lang];
+  const navItems = NAV_PATHS.map((path, i) => ({ label: labels[i], path }));
 
   return (
     <header className="relative z-30 bg-[#030b21] border-b border-white/10">
@@ -56,7 +109,7 @@ export function MarketingHeader() {
         </nav>
 
         <Link to="/register" className="hidden sm:inline-flex rounded-xl bg-white text-[#003061] px-5 py-2.5 text-sm font-extrabold hover:bg-blue-50">
-          Get Started
+          {mt.getStarted}
         </Link>
 
         <button
@@ -82,7 +135,7 @@ export function MarketingHeader() {
               </Link>
             ))}
             <Link to="/register" onClick={() => setOpen(false)} className="rounded-xl bg-white text-[#003061] px-4 py-3 text-sm font-extrabold mt-1">
-              Get Started
+              {mt.getStarted}
             </Link>
           </div>
         </nav>
@@ -92,6 +145,11 @@ export function MarketingHeader() {
 }
 
 export function MarketingFooter() {
+  const { lang } = useLang();
+  const mt = MARKETING_TEXTS[lang];
+  const labels = NAV_LABELS[lang];
+  const navItems = NAV_PATHS.map((path, i) => ({ label: labels[i], path }));
+
   return (
     <footer className="bg-[#030b21] text-slate-400 py-12 px-5 sm:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr] gap-10">
@@ -99,16 +157,16 @@ export function MarketingFooter() {
           <div className="flex items-center gap-3 mb-4">
             <img src="/logo.png" alt="ENAKO Logo" className="h-28 w-auto object-contain" />
           </div>
-          <p className="text-sm leading-7 max-w-md">Secure, compliant, and professional KYC onboarding for individuals and companies.</p>
+          <p className="text-sm leading-7 max-w-md">{mt.footerDesc}</p>
         </div>
         <div>
-          <div className="text-white text-xs font-extrabold uppercase tracking-widest mb-4">Pages</div>
+          <div className="text-white text-xs font-extrabold uppercase tracking-widest mb-4">{mt.pages}</div>
           <div className="grid grid-cols-2 gap-2 text-sm">
             {navItems.map(item => <Link key={item.path} to={item.path} className="hover:text-white">{item.label}</Link>)}
           </div>
         </div>
         <div>
-          <div className="text-white text-xs font-extrabold uppercase tracking-widest mb-4">Contact</div>
+          <div className="text-white text-xs font-extrabold uppercase tracking-widest mb-4">{mt.contact}</div>
           <div className="flex flex-col gap-2 text-sm">
             <span>enakocompanyltd@gmail.com</span>
             <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="hover:text-white">{contactPhone}</a>
@@ -227,12 +285,14 @@ const pageData = {
 
 export function InfoPage({ type }: { type: keyof typeof pageData }) {
   const page = pageData[type];
+  const { lang } = useLang();
+  const mt = MARKETING_TEXTS[lang];
   return (
     <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description}>
       <section className="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-8 mb-10">
           <div className="rounded-[2rem] bg-white border border-[#d9e5f5] p-7 sm:p-9 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">
-            <div className="text-xs font-extrabold uppercase tracking-widest text-[#003061] mb-4">Overview</div>
+            <div className="text-xs font-extrabold uppercase tracking-widest text-[#003061] mb-4">{mt.overview}</div>
             <div className="space-y-5 text-slate-600 leading-8">
               {page.body.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
             </div>
@@ -241,8 +301,8 @@ export function InfoPage({ type }: { type: keyof typeof pageData }) {
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(3,11,33,0.45),rgba(0,48,97,0.85)),url('/download.jpg')] bg-cover bg-center" />
             <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px)', backgroundSize: '34px 34px' }} />
             <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl p-5 text-white">
-              <div className="text-sm font-extrabold mb-1">Secure onboarding workspace</div>
-              <div className="text-xs text-blue-100">Built around trust, document clarity, and compliance review.</div>
+              <div className="text-sm font-extrabold mb-1">{mt.secureWorkspace}</div>
+              <div className="text-xs text-blue-100">{mt.secureWorkspaceDesc}</div>
             </div>
           </div>
         </div>
@@ -268,11 +328,11 @@ export function InfoPage({ type }: { type: keyof typeof pageData }) {
         <div className="mt-10 rounded-[2rem] bg-[#030b21] text-white p-8 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 overflow-hidden relative">
           <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-[#003061]/50 blur-3xl translate-x-1/3 -translate-y-1/3" />
           <div className="relative">
-            <div className="text-xs font-extrabold uppercase tracking-widest text-blue-200 mb-2">Start securely</div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to complete your KYC?</h3>
+            <div className="text-xs font-extrabold uppercase tracking-widest text-blue-200 mb-2">{mt.startSecurely}</div>
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">{mt.readyKYC}</h3>
           </div>
           <Link to="/register" className="relative inline-flex items-center gap-3 rounded-xl bg-white text-[#003061] px-6 py-4 font-extrabold hover:bg-blue-50">
-            Get Started <FaArrowRight />
+            {mt.getStarted} <FaArrowRight />
           </Link>
         </div>
       </section>
@@ -284,6 +344,8 @@ export function MarketingContact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { lang } = useLang();
+  const mt = MARKETING_TEXTS[lang];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -306,20 +368,22 @@ export function MarketingContact() {
     }
   };
 
+  const contactItems = [
+    { icon: FaEnvelope, label: lang === 'en' ? 'Email' : 'Email', value: 'enakocompanyltd@gmail.com' },
+    { icon: FaPhoneAlt, label: lang === 'en' ? 'Phone' : 'Téléphone', value: contactPhone },
+    { icon: FaGlobe, label: lang === 'en' ? 'Website' : 'Site web', value: websiteLabel },
+    { icon: FaClock, label: lang === 'en' ? 'Office Hours' : 'Heures d\'ouverture', value: mt.officeHours },
+  ];
+
   return (
     <PageShell
-      eyebrow="Contact"
-      title="Talk to the ENAKO onboarding team."
-      description="For KYC, compliance, document, and account registration questions, send us a message and our team will respond."
+      eyebrow={lang === 'en' ? 'Contact' : 'Contact'}
+      title={lang === 'en' ? 'Talk to the ENAKO onboarding team.' : 'Parlez à l\'équipe d\'intégration ENAKO.'}
+      description={lang === 'en' ? 'For KYC, compliance, document, and account registration questions, send us a message and our team will respond.' : 'Pour les questions KYC, conformité, documents et inscription de compte, envoyez-nous un message et notre équipe répondra.'}
     >
       <section className="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8">
         <div className="space-y-5">
-          {[
-            { icon: FaEnvelope, label: 'Email', value: 'enakocompanyltd@gmail.com' },
-            { icon: FaPhoneAlt, label: 'Phone', value: contactPhone },
-            { icon: FaGlobe, label: 'Website', value: websiteLabel },
-            { icon: FaClock, label: 'Office Hours', value: 'Mon - Fri, 9am - 5pm GMT' },
-          ].map(item => (
+          {contactItems.map(item => (
             <div key={item.label} className="bg-white border border-[#d9e5f5] rounded-3xl p-6 flex items-center gap-5 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">
               <div className="h-12 w-12 rounded-2xl bg-[#003061]/8 text-[#003061] flex items-center justify-center">
                 <item.icon />
@@ -337,23 +401,23 @@ export function MarketingContact() {
             <div className="mx-auto h-16 w-16 rounded-full bg-[#003061]/8 text-[#003061] flex items-center justify-center mb-5">
               <FaCheck />
             </div>
-            <h2 className="text-2xl font-extrabold text-[#07112b] mb-2">Message Sent</h2>
-            <p className="text-slate-500 mb-6">Thank you. A member of our compliance team will respond within 1 business day.</p>
-            <button onClick={() => setSubmitted(false)} className="rounded-xl bg-[#003061] text-white font-extrabold px-7 py-3">Send Another Message</button>
+            <h2 className="text-2xl font-extrabold text-[#07112b] mb-2">{mt.messageSent}</h2>
+            <p className="text-slate-500 mb-6">{mt.messageSentDesc}</p>
+            <button onClick={() => setSubmitted(false)} className="rounded-xl bg-[#003061] text-white font-extrabold px-7 py-3">{mt.sendAnother}</button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="bg-white border border-[#d9e5f5] rounded-[2rem] p-6 sm:p-8 space-y-5 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <TextInput label="Full Name" value={form.name} onChange={value => setForm({ ...form, name: value })} placeholder="Your full name" />
-              <TextInput label="Email Address" type="email" value={form.email} onChange={value => setForm({ ...form, email: value })} placeholder="you@company.com" />
+              <TextInput label={mt.fullName} value={form.name} onChange={value => setForm({ ...form, name: value })} placeholder={mt.namePlaceholder} />
+              <TextInput label={mt.emailAddress} type="email" value={form.email} onChange={value => setForm({ ...form, email: value })} placeholder={mt.emailPlaceholder} />
             </div>
-            <TextInput label="Subject" value={form.subject} onChange={value => setForm({ ...form, subject: value })} placeholder="e.g. KYC form query" />
+            <TextInput label={mt.subject} value={form.subject} onChange={value => setForm({ ...form, subject: value })} placeholder={mt.subjectPlaceholder} />
             <div>
-              <label className="block text-xs font-extrabold uppercase tracking-widest text-slate-400 mb-2">Message</label>
-              <textarea required rows={5} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Describe your query in detail..." className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-[#003061] focus:ring-2 focus:ring-[#003061]/10 text-sm" />
+              <label className="block text-xs font-extrabold uppercase tracking-widest text-slate-400 mb-2">{mt.message}</label>
+              <textarea required rows={5} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder={mt.messagePlaceholder} className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-[#003061] focus:ring-2 focus:ring-[#003061]/10 text-sm" />
             </div>
             <button disabled={loading} className="w-full rounded-xl bg-[#003061] text-white font-extrabold py-4 hover:bg-[#002347] disabled:opacity-50">
-              {loading ? 'Sending...' : 'Send Message'}
+              {loading ? mt.sending : mt.sendMessage}
             </button>
           </form>
         )}

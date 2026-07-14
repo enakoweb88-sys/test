@@ -19,6 +19,48 @@ import {
   FaSpinner,
   FaUserFriends,
 } from 'react-icons/fa';
+import { useLang } from '../LangContext';
+
+const KYC_TEXTS = {
+  en: {
+    kycProgress: 'KYC Progress',
+    needHelp: 'Need Help?',
+    supportDesc: 'Our support team is here to help you with your onboarding.',
+    contactSupport: 'Contact Support',
+    infoSecure: 'Your information is secure',
+    encryptionDesc: 'We use bank-level encryption to protect your data',
+    accountType: 'Account type',
+    back: 'Back',
+    saveAndContinue: 'Save & Continue',
+    submitApplication: 'Submit Application',
+    allInfoEncrypted: 'All information is encrypted and securely stored',
+    noDataShared: 'We never share your data with third parties',
+    applicationSubmitted: 'Application Submitted',
+    submittedDesc: 'Thank you. Our compliance team will review your documents and respond within 2–5 business days.',
+    submitAnother: 'Submit Another Application',
+    requiredDocs: 'Required Documents',
+    chatOnWhatsApp: 'Chat on WhatsApp',
+  },
+  fr: {
+    kycProgress: 'Progression KYC',
+    needHelp: 'Besoin d\'aide ?',
+    supportDesc: 'Notre équipe d\'assistance est disponible pour vous aider dans votre intégration.',
+    contactSupport: 'Contacter le Support',
+    infoSecure: 'Vos informations sont sécurisées',
+    encryptionDesc: 'Nous utilisons un chiffrement de niveau bancaire pour protéger vos données',
+    accountType: 'Type de compte',
+    back: 'Retour',
+    saveAndContinue: 'Enregistrer & Continuer',
+    submitApplication: 'Soumettre la Demande',
+    allInfoEncrypted: 'Toutes les informations sont chiffrées et stockées en toute sécurité',
+    noDataShared: 'Nous ne partageons jamais vos données avec des tiers',
+    applicationSubmitted: 'Demande Soumise',
+    submittedDesc: 'Merci. Notre équipe de conformité examinera vos documents et répondra dans un délai de 2 à 5 jours ouvrables.',
+    submitAnother: 'Soumettre une Autre Demande',
+    requiredDocs: 'Documents Requis',
+    chatOnWhatsApp: 'Discuter sur WhatsApp',
+  },
+};
 
 type AccountType = 'company' | 'individual';
 type FormState = Record<string, string | boolean>;
@@ -468,6 +510,8 @@ export default function ClientKycForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const { lang } = useLang();
+  const kyt = KYC_TEXTS[lang];
   const { watch, setValue, reset } = useForm<FormState>({
     defaultValues: emptyState(accountType),
     mode: 'onChange',
@@ -618,9 +662,9 @@ export default function ClientKycForm() {
           <div className="mx-auto mb-5 h-16 w-16 rounded-full bg-[#003061]/8 text-[#003061] flex items-center justify-center">
             <FaCheck />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-950 mb-2">Application Submitted</h1>
-          <p className="text-sm text-slate-500 leading-relaxed mb-7">Your {accountType} KYC application has been received. ENAKO compliance will review it within 2-5 business days.</p>
-          <Link to="/" className="inline-flex bg-[#003061] text-white font-bold px-6 py-3 rounded-xl">Return Home</Link>
+          <h1 className="text-2xl font-extrabold text-slate-950 mb-2">{kyt.applicationSubmitted}</h1>
+          <p className="text-sm text-slate-500 leading-relaxed mb-7">{kyt.submittedDesc}</p>
+          <Link to="/" className="inline-flex bg-[#003061] text-white font-bold px-6 py-3 rounded-xl">{lang === 'fr' ? 'Retour à l\'accueil' : 'Return Home'}</Link>
         </motion.div>
       </main>
     );
@@ -651,10 +695,10 @@ export default function ClientKycForm() {
 
           <div className="hidden lg:block rounded-2xl bg-[#eef4ff] border border-[#d9e5f5] p-6">
             <FaHeadset className="text-2xl text-[#2563eb] mb-5" />
-            <h3 className="font-extrabold text-[#07112b] mb-2">Need Help?</h3>
-            <p className="text-sm text-slate-600 leading-6 mb-5">Our support team is here to help you with your onboarding.</p>
+            <h3 className="font-extrabold text-[#07112b] mb-2">{kyt.needHelp}</h3>
+            <p className="text-sm text-slate-600 leading-6 mb-5">{kyt.supportDesc}</p>
             <Link to="/contact" className="inline-flex items-center gap-3 rounded-xl border border-[#bcd0ee] bg-white px-4 py-3 text-sm font-extrabold text-[#2563eb]">
-              Contact Support <FaArrowRight />
+              {kyt.contactSupport} <FaArrowRight />
             </Link>
           </div>
 
@@ -663,8 +707,8 @@ export default function ClientKycForm() {
               <FaShieldAlt />
             </div>
             <div>
-              <div className="text-sm font-extrabold text-[#07112b]">Your information is secure</div>
-              <p className="text-xs text-slate-500 leading-5 mt-1">We use bank-level encryption to protect your data</p>
+              <div className="text-sm font-extrabold text-[#07112b]">{kyt.infoSecure}</div>
+              <p className="text-xs text-slate-500 leading-5 mt-1">{kyt.encryptionDesc}</p>
             </div>
           </div>
         </aside>
@@ -672,7 +716,7 @@ export default function ClientKycForm() {
         <section>
           <div className="mb-8">
             <Link to="/register" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-[#003061] mb-6">
-              <FaArrowLeft /> Account type
+              <FaArrowLeft /> {kyt.accountType}
             </Link>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-[#07112b] mb-3">{step.title}</h1>
             <p className="text-slate-600">{step.description}</p>
@@ -765,12 +809,12 @@ export default function ClientKycForm() {
               disabled={stepIndex === 0 && groupIndex === 0}
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[#d9e5f5] text-sm font-extrabold text-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <FaArrowLeft /> Back
+              <FaArrowLeft /> {kyt.back}
             </button>
             {stepIndex === config.steps.length - 1 && groupIndex === totalGroupsForStep - 1 ? (
               <button type="button" onClick={submit} disabled={loading} className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold disabled:opacity-70">
                 {loading ? <FaSpinner className="animate-spin" /> : <FaCheck />}
-                Submit Application
+                {kyt.submitApplication}
               </button>
             ) : (
               <button
@@ -787,7 +831,7 @@ export default function ClientKycForm() {
                 }}
                 className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold"
               >
-                Save & Continue <FaArrowRight />
+                {kyt.saveAndContinue} <FaArrowRight />
               </button>
             )}
           </div>
@@ -795,8 +839,8 @@ export default function ClientKycForm() {
           <div className="py-7 flex items-center justify-center gap-3 text-sm text-slate-500">
             <FaShieldAlt className="text-[#2563eb]" />
             <div>
-              <span className="font-extrabold text-[#07112b]">All information is encrypted and securely stored</span>
-              <div className="text-xs">We never share your data with third parties</div>
+              <span className="font-extrabold text-[#07112b]">{kyt.allInfoEncrypted}</span>
+              <div className="text-xs">{kyt.noDataShared}</div>
             </div>
           </div>
         </section>

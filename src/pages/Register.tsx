@@ -1,25 +1,49 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useLang } from '../LangContext';
 
-const accountTypes = [
-  {
-    type: 'company',
-    title: 'Company',
-    description: 'For businesses, corporations, and registered organizations.',
-    image: '/premium_business.png',
-    route: '/register/company',
+const TEXTS = {
+  en: {
+    title: 'Select Account Type',
+    subtitle: 'Please choose how you would like to register with ENAKO.',
+    company_title: 'Company',
+    company_desc: 'For businesses, corporations, and registered organizations.',
+    individual_title: 'Individual',
+    individual_desc: 'For personal clients, freelancers, and independent traders.',
+    powered_by: 'Powered by',
   },
-  {
-    type: 'individual',
-    title: 'Individual',
-    description: 'For personal clients, freelancers, and independent traders.',
-    image: '/premium_individual.png',
-    route: '/register/individual',
+  fr: {
+    title: "Sélectionnez le Type de Compte",
+    subtitle: 'Veuillez choisir comment vous souhaitez vous inscrire avec ENAKO.',
+    company_title: 'Entreprise',
+    company_desc: 'Pour les entreprises, sociétés et organisations enregistrées.',
+    individual_title: 'Particulier',
+    individual_desc: 'Pour les clients personnels, freelances et commerçants indépendants.',
+    powered_by: 'Propulsé par',
   },
-];
+};
 
 export default function Register() {
   const navigate = useNavigate();
+  const { lang } = useLang();
+  const t = TEXTS[lang];
+
+  const accountTypes = [
+    {
+      type: 'company',
+      title: t.company_title,
+      description: t.company_desc,
+      image: '/premium_business.png',
+      route: '/register/company',
+    },
+    {
+      type: 'individual',
+      title: t.individual_title,
+      description: t.individual_desc,
+      image: '/premium_individual.png',
+      route: '/register/individual',
+    },
+  ];
 
   return (
     <main className="min-h-screen bg-[#fafafa] flex flex-col relative font-sans">
@@ -30,10 +54,10 @@ export default function Register() {
             <img src="/logo.png" alt="ENAKO" className="h-10 sm:h-12 object-contain mx-auto mb-10 opacity-90" />
           </Link>
           <h1 className="text-3xl sm:text-[34px] font-bold text-slate-900 tracking-tight mb-4">
-            Select Account Type
+            {t.title}
           </h1>
           <p className="text-slate-500 text-[15px]">
-            Please choose how you would like to register with ENAKO.
+            {t.subtitle}
           </p>
         </motion.div>
 
@@ -69,7 +93,7 @@ export default function Register() {
         </div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-20 text-xs text-slate-400 font-medium flex items-center justify-center gap-2">
-          <span>Powered by</span>
+          <span>{t.powered_by}</span>
           <img src="/logo.png" alt="ENAKO" className="h-3 grayscale opacity-60" />
         </motion.div>
       </div>
