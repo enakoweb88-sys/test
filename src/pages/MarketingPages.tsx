@@ -351,7 +351,7 @@ export function MarketingContact() {
     e.preventDefault();
     setLoading(true);
     try {
-      const url = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1');
+      const url = (import.meta.env.VITE_API_URL || 'https://api.enakoos.com/api/v1');
       const res = await fetch(`${url}/tickets/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

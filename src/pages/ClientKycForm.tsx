@@ -588,7 +588,7 @@ export default function ClientKycForm() {
         ? envApiUrl 
         : (isLocal 
             ? 'http://localhost:5000/api/v1' 
-            : 'https://backend-production-e10c8.up.railway.app/api/v1');
+            : 'https://api.enakoos.com/api/v1');
 
       // Build FormData to support file uploads
       const formData = new FormData();
