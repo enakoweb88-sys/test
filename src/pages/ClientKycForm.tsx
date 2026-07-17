@@ -97,9 +97,9 @@ const formConfig = {
             title: 'Basic Company Details',
             icon: FaBuilding,
             fields: [
-              { name: 'companyName', label: 'Company Legal Name', required: true, placeholder: 'Enter company legal name' },
+              { name: 'companyName', label: 'Company Legal Name', required: true, placeholder: 'Enter company legal name', dynamicLabel: (f: FormState) => f.companyType === 'NGO' ? 'NGO Legal Name' : (f.companyType === 'Sole Proprietorship' ? 'Business Legal Name' : 'Company Legal Name'), dynamicPlaceholder: (f: FormState) => f.companyType === 'NGO' ? 'Enter NGO legal name' : (f.companyType === 'Sole Proprietorship' ? 'Enter business legal name' : 'Enter company legal name') },
               { name: 'tradingName', label: 'Trading Name (if different)', placeholder: 'Enter trading name' },
-              { name: 'registrationNumber', label: 'Registration Number', required: true, placeholder: 'Enter registration number' },
+              { name: 'registrationNumber', label: 'Registration Number', required: true, placeholder: 'Enter registration number', dynamicLabel: (f: FormState) => f.companyType ? `${f.companyType} Registration Number` : 'Registration Number', dynamicPlaceholder: (f: FormState) => f.companyType ? `Enter ${String(f.companyType).toLowerCase()} registration number` : 'Enter registration number' },
               { name: 'taxNumber', label: 'Tax Identification Number (TIN)', required: true, placeholder: 'Enter tax identification number' },
               { name: 'incorporationDate', label: 'Incorporation Date', required: true, type: 'date' },
               { name: 'companyType', label: 'Company Type', required: true, type: 'select', options: ['Private Limited', 'Public Limited', 'Partnership', 'Sole Proprietorship', 'NGO'] },
@@ -117,7 +117,7 @@ const formConfig = {
             fields: [
               { name: 'natureOfBusiness', label: 'Nature of Business', required: true, type: 'select', options: ['Financial Services', 'Import / Export', 'Technology', 'Consulting', 'Real Estate', 'Retail', 'Other'] },
               { name: 'industry', label: 'Industry', required: true, type: 'select', options: ['Banking', 'Fintech', 'Trade', 'Energy', 'Professional Services', 'Other'] },
-              { name: 'businessActivity', label: 'Company Description', required: true, type: 'textarea', placeholder: 'Please describe your business activities', wide: true },
+              { name: 'businessActivity', label: 'Company Description', required: true, type: 'textarea', placeholder: 'Please describe your business activities', wide: true, dynamicLabel: (f: FormState) => f.companyType === 'NGO' ? 'NGO Description' : (f.companyType === 'Sole Proprietorship' ? 'Business Description' : 'Company Description') },
               { name: 'employees', label: 'Number of Employees', placeholder: 'Enter number of employees' },
               { name: 'annualRevenue', label: 'Annual Revenue Range', required: true, type: 'select', options: ['Below $50k', '$50k - $250k', '$250k - $1m', '$1m - $10m', 'Above $10m'] },
             ],
@@ -230,10 +230,10 @@ const formConfig = {
         uploads: [
           { name: 'corporateDocuments', label: 'Corporate Documents' },
           { name: 'idCard', label: 'ID Card' },
-          { name: 'articlesOfAssociation', label: 'Articles of Association' },
+          { name: 'articlesOfAssociation', label: 'Articles of Association', dynamicLabel: (f: FormState) => f.companyType === 'NGO' ? 'Constitution / By-laws' : 'Articles of Association' },
           { name: 'taxpayerCard', label: 'Taxpayer Card' },
           { name: 'bankStatements', label: 'Bank Statements' },
-          { name: 'certificateOfIncorporation', label: 'Certificate of Incorporation' },
+          { name: 'certificateOfIncorporation', label: 'Certificate of Incorporation', dynamicLabel: (f: FormState) => f.companyType === 'NGO' ? 'Certificate of Registration' : 'Certificate of Incorporation' },
         ],
         schema: z.object({}),
       },
@@ -303,7 +303,7 @@ const formConfig = {
             icon: FaIdCard,
             fields: [
               { name: 'idType', label: 'ID Type', required: true, type: 'select', options: ['Passport', 'National ID', 'Residence Permit', 'Driver License'] },
-              { name: 'idNumber', label: 'Passport / ID Number', required: true, placeholder: 'Enter document number' },
+              { name: 'idNumber', label: 'Passport / ID Number', required: true, placeholder: 'Enter document number', dynamicLabel: (f: FormState) => f.idType ? `${f.idType} Number` : 'Passport / ID Number', dynamicPlaceholder: (f: FormState) => f.idType ? `Enter ${String(f.idType).toLowerCase()} number` : 'Enter document number' },
               { name: 'expiryDate', label: 'Expiry Date', required: true, type: 'date' },
             ],
           },
@@ -352,7 +352,7 @@ const formConfig = {
         description: 'Upload clear verification documents',
         icon: FaFileAlt,
         uploads: [
-          { name: 'idPassportUpload', label: 'ID/Passport Upload' },
+          { name: 'idPassportUpload', label: 'ID/Passport Upload', dynamicLabel: (f: FormState) => f.idType ? `${f.idType} Upload` : 'ID/Passport Upload' },
           { name: 'proofOfAddress', label: 'Proof of Address' },
           { name: 'selfieVerification', label: 'Selfie Verification' },
         ],
@@ -584,11 +584,12 @@ export default function ClientKycForm() {
     try {
       const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const defaultHost = window.location.hostname.replace(/^(www\.|app\.|os\.|client\.|dashboard\.)/, '');
       const API_BASE = (envApiUrl && envApiUrl !== 'undefined') 
         ? envApiUrl 
         : (isLocal 
             ? 'http://localhost:5000/api/v1' 
-            : 'https://api.enakoos.com/api/v1');
+            : `https://api.${defaultHost}/api/v1`);
 
       // Build FormData to support file uploads
       const formData = new FormData();
@@ -745,10 +746,19 @@ export default function ClientKycForm() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {(step as any).groups[groupIndex].fields.map((field: any) => (
                       <div key={field.name} className={'wide' in field && field.wide ? 'md:col-span-2' : ''}>
-                        <Field field={field} value={form[field.name]} error={errors[field.name]} onChange={(name, value) => {
-                          setValue(name, value, { shouldDirty: true, shouldTouch: true });
-                          if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-                        }} />
+                        <Field 
+                          field={{
+                            ...field,
+                            label: field.dynamicLabel ? field.dynamicLabel(form) : field.label,
+                            placeholder: field.dynamicPlaceholder ? field.dynamicPlaceholder(form) : field.placeholder
+                          }} 
+                          value={form[field.name]} 
+                          error={errors[field.name]} 
+                          onChange={(name, value) => {
+                            setValue(name, value, { shouldDirty: true, shouldTouch: true });
+                            if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+                          }} 
+                        />
                         {field.name === 'hasAmlPolicy' && form.hasAmlPolicy === 'Yes' && (
                           <div className="mt-5 max-w-sm">
                              <UploadCard 
@@ -778,7 +788,7 @@ export default function ClientKycForm() {
                     {(step as any).uploads.map((upload: any) => (
                       <UploadCard 
                         key={upload.name} 
-                        label={upload.label} 
+                        label={upload.dynamicLabel ? upload.dynamicLabel(form) : upload.label} 
                         file={uploads[upload.name]} 
                         error={errors[upload.name]}
                         onChange={file => {
