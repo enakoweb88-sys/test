@@ -352,7 +352,7 @@ export function MarketingContact() {
     setLoading(true);
     try {
       const defaultHost = window.location.hostname.replace(/^(www\.|app\.|os\.|client\.|dashboard\.)/, '');
-      const url = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/api/v1' : `https://api.${defaultHost}/api/v1`);
+      const url = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'https://api.enakoos.com/api/v1' : `https://api.${defaultHost}/api/v1`);
       const res = await fetch(`${url}/tickets/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

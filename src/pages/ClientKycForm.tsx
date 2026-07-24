@@ -588,7 +588,7 @@ export default function ClientKycForm() {
       const API_BASE = (envApiUrl && envApiUrl !== 'undefined') 
         ? envApiUrl 
         : (isLocal 
-            ? 'http://localhost:5000/api/v1' 
+            ? 'https://api.enakoos.com/api/v1' 
             : `https://api.${defaultHost}/api/v1`);
 
       // Build FormData to support file uploads
