@@ -1269,6 +1269,41 @@ export function LandingPage() {
   );
 }
 
+// ─── Cookie Banner ────────────────────────────────────────────────────────────
+function CookieBanner() {
+  const [show, setShow] = useState(() => {
+    return localStorage.getItem('enako_cookies_accepted') === null;
+  });
+
+  if (!show) return null;
+
+  const handleDismiss = () => {
+    localStorage.setItem('enako_cookies_accepted', 'true');
+    setShow(false);
+  };
+
+  return (
+    <div className="fixed bottom-0 left-0 w-full bg-[#15202b] z-[100] border-t border-slate-700 py-5 px-6 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="flex-1 pr-0 md:pr-10 text-left">
+          <h3 className="text-white text-base sm:text-lg font-bold mb-1.5">Did someone say ... cookies?</h3>
+          <p className="text-[#8b98a5] text-[13px] sm:text-sm leading-relaxed">
+            ENAKO and its partners use cookies to provide you with a better, safer and faster service and to support our business. Some cookies are necessary to use our services, improve our services, and make sure they work properly. <span className="underline cursor-pointer hover:text-white transition-colors">Show more about your choices.</span>
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 w-full md:w-auto shrink-0 md:min-w-[320px]">
+          <button onClick={handleDismiss} className="w-full bg-white text-slate-900 font-bold py-2.5 px-6 rounded-full hover:bg-slate-200 transition-colors text-[15px]">
+            Accept all cookies
+          </button>
+          <button onClick={handleDismiss} className="w-full bg-white text-slate-900 font-bold py-2.5 px-6 rounded-full hover:bg-slate-200 transition-colors text-[15px]">
+            Refuse non-essential cookies
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   return (
@@ -1290,6 +1325,7 @@ export default function App() {
           <Route path="/terms" element={<TermsOfService />} />
         </Routes>
         <WhatsAppWidget />
+        <CookieBanner />
       </BrowserRouter>
     </LangProvider>
   );
