@@ -1324,6 +1324,7 @@ export default function App() {
           <Route path="/compliance-policy" element={<CompliancePolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
         </Routes>
+        <WhatsAppWidget />
         <CookieBanner />
       </BrowserRouter>
     </LangProvider>
