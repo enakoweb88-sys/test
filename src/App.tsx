@@ -444,8 +444,8 @@ function KYCForm() {
           {/* Submit */}
           <button onClick={() => { if (declared) setSubmitted(true); }} disabled={!declared}
             className={`w-full py-4 sm:py-5 font-bold text-base sm:text-lg transition-all ${declared
-                ? 'bg-[#003061] text-white hover:bg-[#002347] shadow-xl shadow-[#003061]/20 hover:shadow-2xl hover:shadow-[#003061]/30 hover:-translate-y-0.5'
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              ? 'bg-[#003061] text-white hover:bg-[#002347] shadow-xl shadow-[#003061]/20 hover:shadow-2xl hover:shadow-[#003061]/30 hover:-translate-y-0.5'
+              : 'bg-slate-100 text-slate-400 cursor-not-allowed'
               }`}>
             Submit KYC Application
           </button>
@@ -796,9 +796,8 @@ export function LandingPage() {
                           localStorage.setItem('enako_language', 'en');
                           setLangDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                          lang === 'en' ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
-                        }`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold rounded-lg transition-colors cursor-pointer ${lang === 'en' ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
+                          }`}
                       >
                         English
                         {lang === 'en' && <FaCheck className="text-[10px]" />}
@@ -809,9 +808,8 @@ export function LandingPage() {
                           localStorage.setItem('enako_language', 'fr');
                           setLangDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                          lang === 'fr' ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
-                        }`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold rounded-lg transition-colors cursor-pointer ${lang === 'fr' ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
+                          }`}
                       >
                         Français
                         {lang === 'fr' && <FaCheck className="text-[10px]" />}
@@ -856,9 +854,8 @@ export function LandingPage() {
                       setLang('en');
                       localStorage.setItem('enako_language', 'en');
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      lang === 'en' ? 'bg-blue-600 text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${lang === 'en' ? 'bg-blue-600 text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+                      }`}
                   >
                     English
                   </button>
@@ -867,9 +864,8 @@ export function LandingPage() {
                       setLang('fr');
                       localStorage.setItem('enako_language', 'fr');
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      lang === 'fr' ? 'bg-blue-600 text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${lang === 'fr' ? 'bg-blue-600 text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+                      }`}
                   >
                     Français
                   </button>
