@@ -714,7 +714,7 @@ export default function ClientKycForm() {
           </div>
         </aside>
 
-        <section>
+        <section className="pb-32 sm:pb-0">
           <div className="mb-8">
             <Link to="/register" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-[#003061] mb-6">
               <FaArrowLeft /> {kyt.accountType}
@@ -803,7 +803,7 @@ export default function ClientKycForm() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="mt-5 bg-white border border-[#d9e5f5] rounded-2xl p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="fixed bottom-0 left-0 right-0 sm:sticky sm:mt-5 sm:bg-transparent sm:border-0 sm:rounded-2xl sm:p-0 sm:static bg-white border-t border-[#d9e5f5] p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 z-50">
             <button
               type="button"
               onClick={() => {
