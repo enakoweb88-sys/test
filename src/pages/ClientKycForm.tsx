@@ -822,7 +822,7 @@ export default function ClientKycForm() {
               <FaArrowLeft /> {kyt.back}
             </button>
             {stepIndex === config.steps.length - 1 && groupIndex === totalGroupsForStep - 1 ? (
-              <button type="button" onClick={submit} disabled={loading} className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold disabled:opacity-70">
+              <button type="button" onClick={submit} disabled={loading} className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-extrabold disabled:opacity-70">
                 {loading ? <FaSpinner className="animate-spin" /> : <FaCheck />}
                 {kyt.submitApplication}
               </button>
@@ -839,7 +839,7 @@ export default function ClientKycForm() {
                     }
                   }
                 }}
-                className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#003061] text-white text-sm font-extrabold"
+                className="inline-flex justify-center items-center gap-3 px-7 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-extrabold"
               >
                 {kyt.saveAndContinue} <FaArrowRight />
               </button>
