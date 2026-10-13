@@ -106,7 +106,7 @@ const formConfig = {
               { name: 'businessAddress', label: 'Registered Address', required: true, placeholder: 'Enter complete registered address', wide: true },
               { name: 'city', label: 'City', required: true, placeholder: 'Enter city' },
               { name: 'state', label: 'State / Province', required: true, placeholder: 'Enter state or province' },
-              { name: 'country', label: 'Country', required: true, type: 'select', options: ['Cameroon', 'Nigeria', 'Ghana', 'United States', 'United Kingdom', 'Other'] },
+              { name: 'country', label: 'Country', required: true, type: 'select', options: ['Cameroon', 'Cameroon', 'Cameroon', 'United States', 'United Kingdom', 'Other'] },
               { name: 'postalCode', label: 'Postal / ZIP Code', required: true, placeholder: 'Enter postal or ZIP code' },
               { name: 'website', label: 'Website (if available)', placeholder: 'Enter website URL' },
             ],
@@ -435,12 +435,12 @@ function Field({ field, value, error, onChange }: {
           {field.options?.map(option => <option key={option}>{option}</option>)}
         </select>
       ) : (
-        <input 
-          type={field.type || 'text'} 
-          value={String(value || '')} 
-          onChange={e => onChange(field.name, e.target.value)} 
-          placeholder={field.placeholder} 
-          className={baseClass} 
+        <input
+          type={field.type || 'text'}
+          value={String(value || '')}
+          onChange={e => onChange(field.name, e.target.value)}
+          placeholder={field.placeholder}
+          className={baseClass}
           {...(field.type === 'date' ? { min: '1900-01-01', max: '2099-12-31' } : {})}
         />
       )}
@@ -545,7 +545,7 @@ export default function ClientKycForm() {
     if (!isUploadsView && hasGroups) {
       const currentGroup = (step as any).groups[groupIndex];
       const currentFields = currentGroup.fields.map((f: any) => f.name);
-      
+
       const result = step.schema.safeParse(form);
       if (!result.success) {
         result.error.issues.forEach(issue => {
@@ -583,13 +583,9 @@ export default function ClientKycForm() {
     setLoading(true);
     try {
       const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const defaultHost = window.location.hostname.replace(/^(www\.|app\.|os\.|client\.|dashboard\.)/, '');
-      const API_BASE = (envApiUrl && envApiUrl !== 'undefined') 
-        ? envApiUrl 
-        : (isLocal 
-            ? 'https://api.enakoos.com/api/v1' 
-            : `https://api.${defaultHost}/api/v1`);
+      const API_BASE = (envApiUrl && envApiUrl !== 'undefined' && envApiUrl.trim() !== '')
+        ? envApiUrl.trim()
+        : 'https://api.enakoos.com/api/v1';
 
       // Build FormData to support file uploads
       const formData = new FormData();
@@ -633,7 +629,7 @@ export default function ClientKycForm() {
       if (!contentType || !contentType.includes('application/json')) {
         throw new Error('API Configuration Error: The request hit a frontend route instead of the backend API. Please ensure VITE_API_URL is correctly set in Vercel.');
       }
-      
+
       await res.json(); // ensure it parses
 
       setSubmitted(true);
@@ -746,30 +742,30 @@ export default function ClientKycForm() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {(step as any).groups[groupIndex].fields.map((field: any) => (
                       <div key={field.name} className={'wide' in field && field.wide ? 'md:col-span-2' : ''}>
-                        <Field 
+                        <Field
                           field={{
                             ...field,
                             label: field.dynamicLabel ? field.dynamicLabel(form) : field.label,
                             placeholder: field.dynamicPlaceholder ? field.dynamicPlaceholder(form) : field.placeholder
-                          }} 
-                          value={form[field.name]} 
-                          error={errors[field.name]} 
+                          }}
+                          value={form[field.name]}
+                          error={errors[field.name]}
                           onChange={(name, value) => {
                             setValue(name, value, { shouldDirty: true, shouldTouch: true });
                             if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-                          }} 
+                          }}
                         />
                         {field.name === 'hasAmlPolicy' && form.hasAmlPolicy === 'Yes' && (
                           <div className="mt-5 max-w-sm">
-                             <UploadCard 
-                               label="Upload AML Policy Document" 
-                               file={uploads['amlPolicyDocument']} 
-                               error={errors['amlPolicyDocument']}
-                               onChange={file => {
-                                 uploadFile('amlPolicyDocument', file);
-                                 if (errors['amlPolicyDocument']) setErrors(prev => ({ ...prev, amlPolicyDocument: '' }));
-                               }} 
-                             />
+                            <UploadCard
+                              label="Upload AML Policy Document"
+                              file={uploads['amlPolicyDocument']}
+                              error={errors['amlPolicyDocument']}
+                              onChange={file => {
+                                uploadFile('amlPolicyDocument', file);
+                                if (errors['amlPolicyDocument']) setErrors(prev => ({ ...prev, amlPolicyDocument: '' }));
+                              }}
+                            />
                           </div>
                         )}
                       </div>
@@ -786,15 +782,15 @@ export default function ClientKycForm() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {(step as any).uploads.map((upload: any) => (
-                      <UploadCard 
-                        key={upload.name} 
-                        label={upload.dynamicLabel ? upload.dynamicLabel(form) : upload.label} 
-                        file={uploads[upload.name]} 
+                      <UploadCard
+                        key={upload.name}
+                        label={upload.dynamicLabel ? upload.dynamicLabel(form) : upload.label}
+                        file={uploads[upload.name]}
                         error={errors[upload.name]}
                         onChange={file => {
                           uploadFile(upload.name, file);
                           if (errors[upload.name]) setErrors(prev => ({ ...prev, [upload.name]: '' }));
-                        }} 
+                        }}
                       />
                     ))}
                   </div>
